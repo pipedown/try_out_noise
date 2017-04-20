@@ -14,7 +14,6 @@ if (typeof nconf.get("last_indexed") == "undefined") {
             console.error(err.message);
             return;
         }
-        console.log('Configuration saved successfully.');
     });
 }
 
@@ -74,7 +73,6 @@ function getLatestShows(pageNum) {
 
         http.get(options, response => {
             var str = '';
-            console.log('getting a page');
 
             //another chunk of data has been recieved, so append it to `str`
             response.on('data', function (chunk) {
@@ -130,8 +128,6 @@ const server = http.createServer((req, res) => {
         });
         req.on('end', () => {
             index.query(str).then(results => {
-                console.log("got results");
-                
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.write(JSON.stringify(results, null, 2));
