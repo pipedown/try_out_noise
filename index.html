@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>HTML5 boilerplate – all you really need…</title>
+
+</head>
+
+<body id="home">
+
+	<h1>HTML5 boilerplate</h1>
+<script type="text/javascript">
+function submit() {
+    var q = document.getElementById("query").value
+    //alert(document.form.query.value);
+    alert(q);
+}
+</script>
+
+    <form name="form">
+        query:<br>
+        <textarea name="query" rows="4" cols="50">
+find {"name": "Seinfield"} return .
+        </textarea>
+    </form>
+
+    <button onclick="submit();">Click me</button>
+</body>
+</html>

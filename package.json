@@ -1,0 +1,29 @@
+{
+  "name": "try_out_noise",
+  "version": "1.0.0",
+  "description": "Try out Noise queries in the browser.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pipedown/try_out_noise.git"
+  },
+  "keywords": [
+    "demo",
+    "noise",
+    "search"
+  ],
+  "author": "Damien Katz",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/pipedown/try_out_noise/issues"
+  },
+  "homepage": "https://github.com/pipedown/try_out_noise#readme",
+  "dependencies": {
+    "async": "^2.3.0",
+    "nconf": "^0.8.4",
+    "noise-search": "^0.2.0"
+  }
+}
