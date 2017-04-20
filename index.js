@@ -95,7 +95,7 @@ function getLatestShows(pageNum) {
                 if (shows.length != 0) {
                     getLatestShows(pageNum + 1);
                 } else {
-                    // try again in 12 hrs
+                    // try again for latest in 12 hrs
                     setInterval(getLatestShows, 1000*60*60*12, Math.floor(nconf.get("last_indexed") / 250));
                 }
                 callback();
@@ -130,9 +130,12 @@ const server = http.createServer((req, res) => {
         });
         req.on('end', () => {
             index.query(str).then(results => {
+                console.log("got results");
+                
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify(results));
+                res.write(JSON.stringify(results, null, 2));
+                res.end();
             }).catch(e => {
                 res.statusCode = 400;
                 res.setHeader('Content-Type', 'application/json');

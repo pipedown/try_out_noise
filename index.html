@@ -2,28 +2,39 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>HTML5 boilerplate – all you really need…</title>
+	<title>Try Out Noise Search</title>
 
 </head>
 
 <body id="home">
 
-	<h1>HTML5 boilerplate</h1>
+	<h1>Try out Noise queries in your browser!</h1>
 <script type="text/javascript">
-function submit() {
+function doSubmit() {
     var q = document.getElementById("query").value
-    //alert(document.form.query.value);
-    alert(q);
+    var xhr = new XMLHttpRequest();
+    xhr.addEventListener("load", resp => {
+        if(xhr.readyState == 4) {
+            var el = document.getElementById("results");
+            el.textContent = xhr.responseText;
+        }
+    });
+    xhr.open("POST", "/query");
+    xhr.setRequestHeader("Content-Type", 'application/json');
+    xhr.send(q);
+
 }
 </script>
 
     <form name="form">
         query:<br>
-        <textarea name="query" rows="4" cols="50">
-find {"name": "Seinfield"} return .
+        <textarea id="query" rows="4" cols="50">
+find {"name": == "Seinfeld"} return .
         </textarea>
     </form>
 
-    <button onclick="submit();">Click me</button>
+    <button onclick="doSubmit();">Click me</button>
+
+    <pre id="results"></pre>
 </body>
 </html>
