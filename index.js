@@ -1,4 +1,5 @@
 var http = require('http');
+var accesslog = require('access-log');
 var nconf = require('nconf');
 var noise = require('noise-search');
 var async = require('async');
@@ -114,6 +115,8 @@ getLatestShows(Math.floor(nconf.get("last_indexed") / 250));
 const hostname = '0.0.0.0';
 const port = 3000;
 const maxPostSize = 4 * 1024;
+const accessLogFormat = ':ip - :userID [:endDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent"';
+const escapeNewlineRegexp = /\n|\r\n|\r/g;
 
 const server = http.createServer((req, res) => {
     if (req.method == 'GET') {
@@ -135,6 +138,9 @@ const server = http.createServer((req, res) => {
             }
         });
         req.on('end', () => {
+            accesslog(req, res, accessLogFormat, s => {
+                console.log(s, '|', str.replace(escapeNewlineRegexp, '\\n'));
+            });
             index.query(str).then(results => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
