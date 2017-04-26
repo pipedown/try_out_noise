@@ -113,6 +113,7 @@ getLatestShows(Math.floor(nconf.get("last_indexed") / 250));
 
 const hostname = '0.0.0.0';
 const port = 3000;
+const maxPostSize = 4 * 1024;
 
 const server = http.createServer((req, res) => {
     if (req.method == 'GET') {
@@ -125,6 +126,13 @@ const server = http.createServer((req, res) => {
         var str = '';
         req.on('data', chunk => {
             str += chunk;
+            if (str.length > maxPostSize) {
+                req.removeAllListeners('data');
+                req.removeAllListeners('end');
+                res.statusCode = 413;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({error: 'The query was too long.'}));
+            }
         });
         req.on('end', () => {
             index.query(str).then(results => {
