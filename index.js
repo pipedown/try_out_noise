@@ -1,5 +1,6 @@
 var http = require('http');
 var accesslog = require('access-log');
+var genericPool = require('generic-pool');
 var nconf = require('nconf');
 var noise = require('noise-search');
 var async = require('async');
@@ -118,6 +119,42 @@ const maxPostSize = 4 * 1024;
 const accessLogFormat = ':ip - :userID [:endDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent"';
 const escapeNewlineRegexp = /\n|\r\n|\r/g;
 
+// Number of open indexes for querying
+const numQueryIndexes = process.env.NOISE_QUERY_INDEXES || 4;
+const maxWaitingClients = process.env.NOISE_MAX_WAITING_CLIENTS || 10;
+const acquireTimeoutMillis = process.env.NOISE_ACQUIRE_TIMEOUT || 5000;
+
+// Setup a pool for indexes for some parallelism
+const factory = {
+    create: function() {
+        return new Promise((resolve, reject) => {
+            let index = noise.open('show_index', false);
+            resolve(index);
+        });
+    },
+    destroy: function(index) {
+        return new Promise(resolve => {
+            index.close();
+            resolve();
+        });
+    }
+}
+const opts = {
+    max: numQueryIndexes,
+    min: numQueryIndexes,
+    maxWaitingClients: maxWaitingClients,
+    acquireTimeoutMillis: acquireTimeoutMillis,
+    fifo: false,
+}
+const noisePool = genericPool.createPool(factory, opts)
+
+
+const sendErrorResponse = (res, statusCode, error) => {
+    res.statusCode = statusCode;
+    res.setHeader('Content-Type', 'application/json');
+    res.end(JSON.stringify({error: error.toString()}));
+};
+
 const server = http.createServer((req, res) => {
     if (req.method == 'GET') {
         res.statusCode = 200;
@@ -132,25 +169,30 @@ const server = http.createServer((req, res) => {
             if (str.length > maxPostSize) {
                 req.removeAllListeners('data');
                 req.removeAllListeners('end');
-                res.statusCode = 413;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify({error: 'The query was too long.'}));
+                sendErrorResponse(res, 413, 'The query was too long.');
             }
         });
         req.on('end', () => {
-            accesslog(req, res, accessLogFormat, s => {
-                console.log(s, '|', str.replace(escapeNewlineRegexp, '\\n'));
-            });
-            index.query(str).then(results => {
-                res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
-                res.write(JSON.stringify(results, null, 2));
-                res.end();
-            }).catch(e => {
-                res.statusCode = 400;
-                res.setHeader('Content-Type', 'application/json');
-                res.end(JSON.stringify({error: '' + e}));
-
+            const indexPromise = noisePool.acquire();
+            indexPromise.then(index => {
+                accesslog(req, res, accessLogFormat, line => {
+                    console.log(line,
+                                '|',
+                                str.replace(escapeNewlineRegexp, '\\n'));
+                });
+                return index.query(str).then(results => {
+                    noisePool.release(index);
+                    res.statusCode = 200;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.write(JSON.stringify(results, null, 2));
+                    res.end();
+                }).catch(error => {
+                    noisePool.release(index);
+                    sendErrorResponse(res, 400, error);
+                });
+            }).catch(error => {
+                sendErrorResponse(
+                    res, 503, 'Too much load on the server, please try again');
             });
         });
     }
@@ -158,6 +200,9 @@ const server = http.createServer((req, res) => {
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
+  console.log(`Settings: {"NOISE_QUERY_INDEXES": ${numQueryIndexes}, ` +
+    `"NOISE_MAX_WAITING_CLIENTS": ${maxWaitingClients}, ` +
+    `"NOISE_ACQUIRE_TIMEOUT": ${acquireTimeoutMillis}}`);
 });
 
 

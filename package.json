@@ -24,7 +24,9 @@
   "dependencies": {
     "access-log": "^0.3.0",
     "async": "^2.3.0",
+    "generic-pool": "^3.1.7",
     "nconf": "^0.8.4",
-    "noise-search": "^0.2.0"
+    "noise-search": "^0.2.0",
+    "sleep-promise": "^2.0.0"
   }
 }
