@@ -1,0 +1,15 @@
+[Unit]
+Description=Try out Noise
+After=network.target
+
+[Service]
+User=noise
+Environment=NOISE_QUERY_INDEXES=4 NOISE_MAX_WAITING_CLIENTS=10 NOISE_ACQUIRE_TIMEOUT=5000
+WorkingDirectory=/home/noise/try_out_noise
+ExecStart=/usr/bin/node index.js
+Restart=always
+RestartSec=500ms
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

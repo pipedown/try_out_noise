@@ -1,0 +1,14 @@
+[Unit]
+Description=Monitor for Try out Noise
+After=try-out-noise.service
+
+[Service]
+User=noise
+WorkingDirectory=/home/noise/try_out_noise
+ExecStart=/bin/sh scripts/monitor-try-out-noise.sh
+Restart=always
+RestartSec=500ms
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
