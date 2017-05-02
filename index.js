@@ -181,11 +181,21 @@ const server = http.createServer((req, res) => {
                                 str.replace(escapeNewlineRegexp, '\\n'));
                 });
                 return index.query(str).then(results => {
-                    noisePool.release(index);
                     res.statusCode = 200;
                     res.setHeader('Content-Type', 'application/json');
-                    res.write(JSON.stringify(results, null, 2));
+
+                    res.write('[');
+                    // First result is a special cae to the the commas right
+                    const first = results.next();
+                    if (first.value !== undefined) {
+                        res.write('\n' + JSON.stringify(first.value, null, 2));
+                        for (let result of results) {
+                            res.write(',\n' + JSON.stringify(result, null, 2));
+                        }
+                    }
+                    res.write('\n]');
                     res.end();
+                    noisePool.release(index);
                 }).catch(error => {
                     noisePool.release(index);
                     sendErrorResponse(res, 400, error);
