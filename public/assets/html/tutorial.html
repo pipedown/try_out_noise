@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Noise Query Tutorial</title>
+  </head>
+  <body>
+    <article>
+      <h3>Welcome to the Noise tutorial</h3>
+      <p>
+The data set we'll work on is TV shows. Every TV show is one document that contains the data about the show itself, like the name, length and air date. But also the cast and all the episodes.</p>
+      <p>
+    Let's start simple and query for a show where we already know the exact name. Run the query with pushing the "Query"` button.</p>
+      <code>
+find {name: == "Seinfeld"} return .
+      </code>
+    </article>
+    <article>
+      <h3>A bit more advanced</h3>
+      <p>
+        This is the second step with some text</p>
+            <code>
+find {name: ~= "Star Trek: Voyager"} return .
+      </code>
+    </article>
+  </body>
+</html>

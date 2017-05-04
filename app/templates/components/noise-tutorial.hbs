@@ -1,0 +1,4 @@
+{{# with (get tutorial.pages pageNo) as |page|}}
+  {{{page.description}}}
+  {{yield page.query}}
+{{/with}}
