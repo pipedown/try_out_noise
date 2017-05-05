@@ -1,4 +1,6 @@
-{{# with (get tutorial.pages pageNo) as |page|}}
-  {{{page.description}}}
+{{#with (get tutorial.pages pageNo) as |page|}}
+  <div class="description">
+    {{{page.description}}}
+  </div>
   {{yield page.query}}
 {{/with}}
