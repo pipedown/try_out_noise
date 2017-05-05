@@ -1,9 +1,9 @@
 <h1>Try out Noise</h1>
 
-{{#noise-tutorial pageNo=model.pageNo as |query|}}
-  {{#noise-query query=query as |results|}}
-    {{#each results as |show|}}
-      {{noise-result show=show}}
-    {{/each}}
-  {{/noise-query}}
-{{/noise-tutorial}}
+{{noise-tutorial pageNo=model.pageNo}}
+
+{{#noise-query pageNo=model.pageNo as |results|}}
+  {{#each results as |show|}}
+    {{noise-result show=show}}
+  {{/each}}
+{{/noise-query}}

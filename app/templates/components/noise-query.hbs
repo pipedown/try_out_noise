@@ -1,9 +1,11 @@
 <div class="query">
-  <p>
-    {{textarea value=query cols="60" rows="8" placeholder="Enter your query here. For example: find {name: == \"Seinfeld\"} return ."}}
-  </p>
-  <p>
-    <button type="submit" {{action 'doQuery' query}}>Query</button>
-  </p>
+  {{#with (get tutorial.queries pageNo) as |query|}}
+    <p>
+      {{textarea value=query cols="60" rows="8" placeholder="Enter your query here. For example: find {name: == \"Seinfeld\"} return ."}}
+    </p>
+    <p>
+      <button type="submit" {{action 'doQuery' query}}>Query</button>
+    </p>
+  {{/with}}
 </div>
 {{yield results}}

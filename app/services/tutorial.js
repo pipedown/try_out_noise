@@ -2,7 +2,13 @@ import Ember from 'ember';
 import fetch from "ember-network/fetch";
 
 export default Ember.Service.extend({
-  pages: null,
+  // An array with the description of the current tutorial step. First one
+  // is at index `1` to have nice URLs and easier logic
+  descriptions: null,
+
+  // An array with the queries of the current tutorial step. First one
+  // is at index `1` to have nice URLs and easier logic
+  queries: null,
 
   init() {
     this._super(...arguments);
@@ -21,27 +27,27 @@ export default Ember.Service.extend({
       // "passing in complex HTML".
       const dom = Ember.$('<body>').append(text);
 
-      // Extract queries
-      const queries = dom.find('code');
+      // Extract code tags that contain the queries
+      const codeTags = dom.find('code');
 
-      // Remove the queries from the DOM as we only want the descriptions
-      queries.remove();
+      // Remove the code tags from the DOM as we only want the descriptions
+      codeTags.remove();
 
-      // Extract the descriptions
-      const descriptions = dom.find('article');
+      // Extract the article tags that contain the descriptions
+      const articleTags = dom.find('article');
 
       // The first element is a dummy element so that we can start
       // enumerating the tutorial steps starting with 1.
-      let pages = [null];
+      let queries = [null];
+      let descriptions = [null];
 
       // Re-combine the queries and the descriptions as JSON
-      descriptions.each((ii, description) => {
-        pages.push({
-          description: description,
-          query: Ember.$(queries[ii]).text().trim()
-        });
+      articleTags.each((ii, articleTag) => {
+        queries.push(Ember.$(codeTags[ii]).text().trim());
+        descriptions.push(articleTag);
       });
-      this.set('pages', pages);
+      this.set('queries', queries);
+      this.set('descriptions', descriptions);
     });
   }
 });
