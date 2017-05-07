@@ -17,9 +17,17 @@ find {name: == "Seinfeld"} return .
     <article>
       <h3>A bit more advanced</h3>
       <p>
-        This is the second step with some text</p>
+This is the second step with some text</p>
             <code>
-find {name: ~= "Star Trek: Voyager"} return .
+find {name: == "Star Trek: Voyager"} return .
+      </code>
+    </article>
+    <article>
+      <h3>Several Results</h3>
+      <p>
+This one returns several results</p>
+            <code>
+find {name: ~= "Star Trek"} return .name
       </code>
     </article>
   </body>
