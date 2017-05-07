@@ -1,21 +1,20 @@
 import Ember from 'ember';
-import fetch from "ember-network/fetch";
 
-export default Ember.Service.extend({
+export default Ember.Route.extend({
+  // An array with the query of the current tutorial step. First one
+  // is at index `1` to have nice URLs and easier logic
+  queries: null,
+
   // An array with the description of the current tutorial step. First one
   // is at index `1` to have nice URLs and easier logic
   descriptions: null,
 
-  // An array with the queries of the current tutorial step. First one
+  // An array with the title of the current tutorial step. First one
   // is at index `1` to have nice URLs and easier logic
-  queries: null,
+  titles: null,
 
-  init() {
-    this._super(...arguments);
-
-    // The contents of the tutorial is kept in a static HTML file.
-    // It's loaded once, whenever this service is started.
-    fetch('/assets/html/tutorial.html').then(response => {
+  beforeModel() {
+    return fetch('/assets/html/tutorial.html').then(response => {
       return response.text();
     }).then(text => {
       // The returned value is a full HTML document. If the dom is created
@@ -36,18 +35,31 @@ export default Ember.Service.extend({
       // Extract the article tags that contain the descriptions
       const articleTags = dom.find('article');
 
+      // Extract the h3 tags that contain the titles
+      const h3Tags = dom.find('h3');
+
       // The first element is a dummy element so that we can start
       // enumerating the tutorial steps starting with 1.
       let queries = [null];
       let descriptions = [null];
+      let titles = [null];
 
       // Re-combine the queries and the descriptions as JSON
       articleTags.each((ii, articleTag) => {
         queries.push(Ember.$(codeTags[ii]).text().trim());
         descriptions.push(articleTag);
+        titles.push(Ember.$(h3Tags[ii]).text().trim());
       });
       this.set('queries', queries);
       this.set('descriptions', descriptions);
+      this.set('titles', titles);
     });
+  },
+  model() {
+    return {
+      queries: this.get('queries'),
+      descriptions: this.get('descriptions'),
+      titles: this.get('titles')
+    };
   }
 });

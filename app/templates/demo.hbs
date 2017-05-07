@@ -1,8 +1,8 @@
 <h1>Try out Noise</h1>
 
-{{noise-tutorial pageNo=model.pageNo}}
+{{noise-tutorial description=model.current.description}}
 
-{{#noise-query pageNo=model.pageNo as |results|}}
+{{#noise-query query=model.current.query as |results|}}
   {{#each results as |show|}}
     {{noise-result show=show}}
   {{/each}}
