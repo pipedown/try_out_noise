@@ -6,8 +6,10 @@
 
 <div class="panel">
   {{#noise-query query=model.current.query as |results|}}
-    {{#each results as |show|}}
-      {{noise-result show=show}}
-    {{/each}}
+    {{#if results}}
+      {{#each results as |show|}}
+        {{noise-result show=show}}
+      {{/each}}
+    {{/if}}
   {{/noise-query}}
 </div>

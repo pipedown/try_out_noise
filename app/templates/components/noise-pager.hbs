@@ -1,7 +1,9 @@
-{{#if prev}}
-  {{#link-to 'demo' prev.pageNo class="button"}}Prev{{/link-to}}
-{{/if}}
+<div id="noise-pager">
+  {{#if prev}}
+    {{#link-to 'demo' prev.pageNo class="button prev"}}{{prev.title}}{{/link-to}}
+  {{/if}}
 
-{{#if next}}
-  {{#link-to 'demo' next.pageNo class="button"}}Next{{/link-to}}
-{{/if}}
+  {{#if next}}
+    {{#link-to 'demo' next.pageNo class="button next"}}{{next.title}}{{/link-to}}
+  {{/if}}
+</div>
