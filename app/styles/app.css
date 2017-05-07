@@ -1,0 +1,140 @@
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+.headline {
+  padding: 0 1rem;
+}
+
+.headline::after {
+  border-right: 20px solid #aaa;
+  border-top: 20px solid transparent;
+  content: '';
+  /* `right` needs to be the same as the right padding of the `.headline` */
+  height: calc(20px + 0.5rem);
+  position: absolute;
+  right: 1rem;
+  top: 20px;
+  z-index: 5;
+}
+
+.headline h1::before {
+  border-bottom: 20px solid #666;
+  border-left: 20px solid transparent;
+  content: '';
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: -20px;
+  width: 100%;
+}
+
+.headline h1 {
+  background-color: #000;
+  color: #fff;
+  height: 40px;
+  margin-right: 20px;
+  margin-top: 40px;
+  padding: 0.25rem 1rem;
+  position: relative;
+  z-index: 5;
+}
+
+.headline h1::after {
+  border-bottom: 20px solid transparent;
+  border-left: 20px solid #aaa;
+  bottom: 0;
+  content: '';
+  position: absolute;
+  right: -20px;
+}
+
+
+#noise-description-and-pager {
+  background-color: #ddd;
+  border-left: solid 16px #eee;
+  border-right: solid 6px #555;
+  bottom: 2rem;
+  left: 2rem;
+  overflow: auto;
+  padding: 1rem;
+  padding-right: 5%;
+  position: absolute;
+  right: 45%;
+  top: 4em;
+}
+
+#noise-query-and-results {
+  bottom: 0;
+  left: 50%;
+  position: absolute;
+  right: 2.3rem;
+  top: 2.3rem;
+}
+
+#noise-query {
+  height: 7em;
+  padding: 1rem;
+  position: relative;
+  z-index: 10;
+}
+
+#noise-query textarea {
+  background-color: #fff;
+  border: 2px solid #000;
+  color: #000;
+  float: right;
+  height: 100%;
+  padding: 0.5rem;
+  width: calc(100% - 1rem);
+}
+
+#noise-query button {
+  background-color: #000;
+  border: 2px solid #000;
+  color: #fff;
+  float: right;
+  height: 2.5rem;
+  position: relative;
+  top: -1px;
+  width: 5rem;
+}
+
+#noise-result {
+  bottom: 0;
+  font-size: 80%;
+  left: 0;
+  margin: 1.4rem;
+  overflow: auto;
+  position: absolute;
+  right: 5rem;
+  top: 8.5rem;
+}
+
+code {
+  white-space: pre-wrap;
+}
+
+.code {
+  background-color: #fff;
+  border: 1px solid #000;
+  margin: 0.5rem;
+}
+
+.footer {
+  bottom: 0;
+  font-size: 75%;
+  height: 1rem;
+  left: 0;
+  position: absolute;
+  right: 0;
+}
+
+.footer ol {
+  list-style: none;
+  margin: 0;
+}
+.footer li {
+  display: inline;
+}

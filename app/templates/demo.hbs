@@ -1,9 +1,11 @@
-<h1>Try out Noise</h1>
+<div class="panel">
+  {{noise-tutorial description=model.current.description}}
+</div>
 
-{{noise-tutorial description=model.current.description}}
-
-{{#noise-query query=model.current.query as |results|}}
-  {{#each results as |show|}}
-    {{noise-result show=show}}
-  {{/each}}
-{{/noise-query}}
+<div class="panel">
+  {{#noise-query query=model.current.query as |results|}}
+    {{#each results as |show|}}
+      {{noise-result show=show}}
+    {{/each}}
+  {{/noise-query}}
+</div>
