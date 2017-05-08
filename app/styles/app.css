@@ -222,3 +222,7 @@ code {
 .footer li {
   display: inline;
 }
+
+.about {
+  margin: 0 2rem;
+}
