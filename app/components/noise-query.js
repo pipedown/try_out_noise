@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import fetch from "ember-network/fetch";
 import ENV from '../config/environment'
 
 export default Ember.Component.extend({
@@ -12,13 +11,8 @@ export default Ember.Component.extend({
   actions: {
     doQuery() {
       const query = this.$('textarea').val();
-      fetch(ENV.noiseUrl, {
-        method: "POST",
-        body: query
-      }).then(data => {
-        return data.json();
-      }).then(json => {
-        this.set('results', json);
+      Ember.$.post(ENV.noiseUrl, query, data => {
+        this.set('results', data);
       });
     }
   },
