@@ -150,6 +150,11 @@ const port = 3000;
 const maxPostSize = 4 * 1024;
 const accessLogFormat = ':ip - :userID [:endDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent"';
 const escapeNewlineRegexp = /\n|\r\n|\r/g;
+const headers = {
+    'Content-Type': "application/json",
+    'Access-Control-Allow-Origin': "*",
+    'Access-Control-Allow-Methods': "POST"
+};
 
 // Number of open indexes for querying
 const numQueryIndexes = process.env.NOISE_QUERY_INDEXES || 4;
@@ -182,8 +187,7 @@ const noisePool = genericPool.createPool(factory, opts)
 
 
 const sendErrorResponse = (res, statusCode, error) => {
-    res.statusCode = statusCode;
-    res.setHeader('Content-Type', 'application/json');
+    res.writeHead(statusCode, headers);
     res.end(JSON.stringify({error: error.toString()}));
 };
 
@@ -213,8 +217,7 @@ const server = http.createServer((req, res) => {
                                 str.replace(escapeNewlineRegexp, '\\n'));
                 });
                 return index.query(str).then(results => {
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'application/json');
+                    res.writeHead(200, headers);
 
                     res.write('[');
                     // First result is a special case to get the commas right
