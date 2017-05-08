@@ -1,7 +1,7 @@
 <div id="noise-query-and-results">
   <div id="noise-query">
-    {{textarea value=query placeholder="Enter your query here. For example: find {name: == \"Seinfeld\"} return ."}}
-    <button type="submit" {{action 'doQuery' query}}>Query</button>
+    <textarea value={{query}} placeholder='Enter your query here. For example: find {name: == "Seinfeld"} return .'/>
+    <button type="submit" {{action 'doQuery'}}>Query</button>
   </div>
   <div id="noise-result">
     {{yield results}}
