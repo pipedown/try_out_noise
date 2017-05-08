@@ -40,6 +40,10 @@ a.button {
   font-size: 80%;
 }
 
+a.button:visited {
+  color: #ddd;
+}
+
 textarea {
   font-size: 75%;
 }
