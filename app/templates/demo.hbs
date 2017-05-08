@@ -6,5 +6,7 @@
     {{#each results as |show|}}
       {{noise-result show=show}}
     {{/each}}
+  {{else if (eq results.length 0)}}
+    <div class="no-results">The query didn't return any results.</div>
   {{/if}}
 {{/noise-query}}

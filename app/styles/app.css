@@ -187,13 +187,16 @@ h1::after {
 
 #noise-result {
   bottom: 0;
-  font-size: 60%;
   left: 0;
   margin-left: 1.5rem;
   overflow: auto;
   position: absolute;
   right: 0;
   top: 9rem;
+}
+
+.no-results {
+  font-style: italic;
 }
 
 code {
@@ -204,6 +207,7 @@ code {
   background-color: #f3f3f3;
   border: 1px solid #ddd;
   border-bottom: solid #999 2px;
+  font-size: 60%;
   margin: 0 0.5rem 1rem 0;
   padding: 0.5rem;
 }
