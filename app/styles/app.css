@@ -1,5 +1,6 @@
 html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
 }
@@ -44,13 +45,19 @@ textarea {
   font-size: 75%;
 }
 
+body > div {
+  height: calc(100% - 1rem);
+  padding-top: 1rem;
+}
+
 h1 {
   background-color: #000;
   color: #fff;
   font-size: 170%;
   left: 1rem;
+  margin-top: 0;
   max-width: 70rem;
-  min-width: 50rem;
+  min-width: 22rem;
   padding: 0.25rem 1rem;
   position: relative;
   width: calc(100% - 8.5rem);
@@ -66,29 +73,31 @@ h1::after {
 }
 
 #noise-description-and-pager {
-  bottom: 4rem;
-  left: 2rem;
-  position: absolute;
-  top: 4em;
-  width: 30rem;
+  box-sizing: border-box;
+  float: left;
+  height: calc(100% - 5rem);
+  max-width: 32rem;
+  min-width: 17rem;
+  position: relative;
+  width: 40%;
 }
 
 #noise-description {
   background-color: #ddd;
   border-left: solid 16px #eee;
   border-right: solid 6px #555;
-  bottom: 3rem;
-  left: 0;
+  bottom: 2.5rem;
+  left: 2rem;
   overflow: auto;
-  padding: 1rem;
+  padding: 0.5rem;
   position: absolute;
   right: 0;
-  top: 1rem;
+  top: 0;
 }
 
 #noise-pager {
   bottom: 0;
-  left: 0;
+  left: 2rem;
   position: absolute;
   right: 0;
 }
@@ -136,19 +145,20 @@ h1::after {
   transform: translateX(0.3rem);
 }
 
-#noise-query-and-results {
-  bottom: 0;
-  left: 33.5rem;
-  position: absolute;
-  right: 0;
-  top: 2.2rem;
+.noise-query-and-results {
+  box-sizing: border-box;
+  float: left;
+  height: calc(100% - 1.5rem);
+  margin-top: -2.5rem;
+  position: relative;
+  width: 60%;
 }
 
 #noise-query {
   height: 7em;
+  margin-left: 1.5rem;
   max-width: 45rem;
   min-width: 25rem;
-  width: 100%;
 }
 
 #noise-query > * {
@@ -167,17 +177,20 @@ h1::after {
 
 #noise-query button {
   height: 2.5rem;
+  left: 0.4rem;
+  position: relative;
   width: 5rem;
 }
 
 #noise-result {
   bottom: 0;
-  font-size: 80%;
+  font-size: 60%;
   left: 0;
+  margin-left: 1.5rem;
   overflow: auto;
   position: absolute;
   right: 0;
-  top: 8.5rem;
+  top: 9rem;
 }
 
 code {
@@ -188,7 +201,7 @@ code {
   background-color: #f3f3f3;
   border: 1px solid #ddd;
   border-bottom: solid #999 2px;
-  margin: 0.5rem 0.5rem 1rem 0;
+  margin: 0 0.5rem 1rem 0;
   padding: 0.5rem;
 }
 

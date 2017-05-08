@@ -2,6 +2,7 @@ import Ember from 'ember';
 import fetch from "ember-network/fetch";
 
 export default Ember.Component.extend({
+  classNames: ['noise-query-and-results'],
   results: null,
   // Store the query that was set by the tutorial. If that query changes,
   // by going to another tutorial step, then empty the results.

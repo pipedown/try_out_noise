@@ -1,15 +1,10 @@
-<div class="panel">
-  {{noise-tutorial description=model.current.description
-                   next=model.next
-                   prev=model.prev}}
-</div>
-
-<div class="panel">
-  {{#noise-query query=model.current.query as |results|}}
-    {{#if results}}
-      {{#each results as |show|}}
-        {{noise-result show=show}}
-      {{/each}}
-    {{/if}}
-  {{/noise-query}}
-</div>
+{{noise-tutorial description=model.current.description
+                 next=model.next
+                 prev=model.prev}}
+{{#noise-query query=model.current.query as |results|}}
+  {{#if results}}
+    {{#each results as |show|}}
+      {{noise-result show=show}}
+    {{/each}}
+  {{/if}}
+{{/noise-query}}
