@@ -27,6 +27,36 @@ let index = noise.open('show_index', true);
             task(callback);
         }, 1);
 
+function massageShow(s) {
+    s._id = s.id.toString();
+    delete s.weight;
+    delete s.network.id;
+    delete s.externals;
+    delete s.image;
+    delete s.updated;
+    delete s._links;
+    s.episodes = s._embedded.episodes;
+    s.cast = s._embedded.cast;
+    delete s._embedded;
+
+    s.episodes = s.episodes.map(e => {
+        delete e.id;
+        delete e.image;
+        delete e.airstamp
+        delete e._links;
+        return e;
+    });
+    s.cast.map(c => {
+        delete c.character.id;
+        delete c.character.image;
+        delete c.character._links;
+        delete c.person.id;
+        delete c.person.image;
+        delete c.person._links;
+        return c;
+    });
+}
+
 function indexShow(showListing) {
     httpQ.push(callback => {
         var options = {
@@ -48,7 +78,7 @@ function indexShow(showListing) {
                     callback();
                     return;
                 }
-                show._id = show.id.toString();
+                massageShow(show);
                 index.add(show).then(id => {
                     console.log("Indexed " + show.name +' (' + id + ')');
                     nconf.set('last_indexed', id);
