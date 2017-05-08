@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import fetch from "ember-network/fetch";
+import ENV from '../config/environment'
 
 export default Ember.Component.extend({
   classNames: ['noise-query-and-results'],
@@ -11,7 +12,7 @@ export default Ember.Component.extend({
   actions: {
     doQuery() {
       const query = this.$('textarea').val();
-      fetch("http://127.0.0.1:3000/query", {
+      fetch(ENV.noiseUrl, {
         method: "POST",
         body: query
       }).then(data => {
