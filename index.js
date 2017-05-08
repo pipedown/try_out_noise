@@ -191,6 +191,22 @@ const sendErrorResponse = (res, statusCode, error) => {
     res.end(JSON.stringify({error: error.toString()}));
 };
 
+function sendResponseAsync(res, results, index) {
+    try {
+        const next = results.next();
+        if (next.value !== undefined) {
+            res.write(',\n' + JSON.stringify(next.value, null, 2), () => {
+                sendResponseAsync(res, results, index);
+            });
+        } else {
+            res.end('\n]');
+            noisePool.release(index);
+        }
+    } catch(e) {
+        noisePool.release(index);
+    }
+}
+
 const server = http.createServer((req, res) => {
     if (req.method == 'GET') {
         res.statusCode = 200;
@@ -223,14 +239,14 @@ const server = http.createServer((req, res) => {
                     // First result is a special case to get the commas right
                     const first = results.next();
                     if (first.value !== undefined) {
-                        res.write('\n' + JSON.stringify(first.value, null, 2));
-                        for (let result of results) {
-                            res.write(',\n' + JSON.stringify(result, null, 2));
-                        }
+                        res.write('\n' + JSON.stringify(first.value, null, 2), 'utf8', () => {
+                            sendResponseAsync(res, results, index);
+                        });
+                    } else {
+                        res.write('\n]');
+                        res.end();
+                        noisePool.release(index);
                     }
-                    res.write('\n]');
-                    res.end();
-                    noisePool.release(index);
                 }).catch(error => {
                     noisePool.release(index);
                     sendErrorResponse(res, 400, error);
