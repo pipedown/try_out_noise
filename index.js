@@ -30,7 +30,9 @@ let index = noise.open('show_index', true);
 function massageShow(s) {
     s._id = s.id.toString();
     delete s.weight;
-    delete s.network.id;
+    if (s.network) {
+        delete s.network.id;
+    }
     delete s.externals;
     delete s.image;
     delete s.updated;
