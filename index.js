@@ -185,7 +185,7 @@ const server = http.createServer((req, res) => {
                     res.setHeader('Content-Type', 'application/json');
 
                     res.write('[');
-                    // First result is a special cae to the the commas right
+                    // First result is a special case to get the commas right
                     const first = results.next();
                     if (first.value !== undefined) {
                         res.write('\n' + JSON.stringify(first.value, null, 2));
