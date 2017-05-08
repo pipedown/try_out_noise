@@ -11,23 +11,75 @@ The data set we'll work on is TV shows. Every TV show is one document that conta
       <p>
     Let's start simple and query for a show where we already know the exact name. Run the query with pushing the "Query"` button.</p>
       <code>
-find {name: == "Seinfeld"} return .
+find
+    {name: ~= "seinfeld"}
+return
+    .
       </code>
     </article>
     <article>
-      <h3>A bit more advanced</h3>
+      <h3>Nested find</h3>
       <p>
-This is the second step with some text</p>
-            <code>
-find {name: == "Star Trek: Voyager"} return .
+Find all shows with a specific actor.</p>
+      <code>
+find
+    {cast: [{person: {name: ~= "Wayne Knight"}}]}
+return
+    .name
       </code>
     </article>
     <article>
-      <h3>Several Results</h3>
-      <p>
-This one returns several results</p>
-            <code>
-find {name: ~= "Star Trek"} return .name
+      <h3>Bind variables</h3>
+      <p>Find all simpsons episodes that mention Troy McClure by using a bind variable.</p>
+      <code>find {
+    name: ~= "The Simpsons",
+    episodes: eps::[{
+        summary: ~= "Troy McClure"
+    }]
+}
+return
+    eps
+      </code>
+    </article>
+    <article>
+      <h3>Query with numbers</h3>
+      <p>Find all the shows with a rating 9 or higher.</p>
+      <code>find
+    {rating: {average: >= 9}}
+return
+    .name
+      </code>
+    </article>
+    <article>
+      <h3>Order and limit results</h3>
+      <p>Find the show with the longest runtime</p>
+      <code>find
+    {runtime: > 0}
+order
+    .runtime desc
+return
+    {name: .name, runtime: .runtime}
+limit 1
+      </code>
+    </article>
+    <article>
+      <h3>Aggrgations: count()</h3>
+      <p>Find number of shows each country has produced.</p>
+      <code>find {}
+return {
+    country: group(.network.country.name),
+    shows: count()
+}
+      </code>
+    </article>
+    <article>
+      <h3>Aggregations: sum()</h3>
+      <p>Find number of hours of television each country has produced</p>
+      <code>find {}
+return {
+    country: group(.network.country.name),
+    total_time: sum(.episodes[].runtime)
+}
       </code>
     </article>
   </body>
