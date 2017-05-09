@@ -44,7 +44,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-    ENV.noiseUrl = '//try.noisesearch.org:3000/query'
+    ENV.noiseUrl = '/query'
   }
 
   return ENV;
