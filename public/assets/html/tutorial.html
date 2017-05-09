@@ -2,6 +2,9 @@
 <html>
   <head>
     <title>Noise Query Tutorial</title>
+    <style type="text/css">
+      code { white-space: pre-wrap; }
+    </style>
   </head>
   <body>
     <article>
@@ -54,7 +57,7 @@ return
       <h3>Order and limit results</h3>
       <p>Find the show with the longest runtime</p>
       <code>find
-    {runtime: > 0}
+    {}
 order
     .runtime desc
 return
@@ -63,7 +66,7 @@ limit 1
       </code>
     </article>
     <article>
-      <h3>Aggrgations: count()</h3>
+      <h3>Aggregations: count()</h3>
       <p>Find number of shows each country has produced.</p>
       <code>find {}
 return {
@@ -77,7 +80,7 @@ return {
       <p>Find number of hours of television each country has produced</p>
       <code>find {}
 return {
-    country: group(.network.country.name),
+    country: group(.network.country.name) default="unknown",
     total_time: sum(.episodes[].runtime)
 }
       </code>
