@@ -11,9 +11,13 @@ export default Ember.Component.extend({
   actions: {
     doQuery() {
       const query = this.$('textarea').val();
-      Ember.$.post(ENV.noiseUrl, query, data => {
-        this.set('results', data);
-      });
+      Ember.$.post(ENV.noiseUrl, query).
+        done(data => {
+          this.set('results', data);
+        })
+        .fail(error => {
+          this.set('results', [error.responseJSON]);
+        });
     }
   },
 
