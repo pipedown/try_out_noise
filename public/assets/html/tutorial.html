@@ -28,6 +28,8 @@ return
       <h3>Nested find</h3>
       <p>
 Find all shows with a specific actor.</p>
+      <p>The cast is an array of objects that contain persons and characters. We mimic the array structure in the query.</p>
+      <p>Modify the query to search shows for you favorite actors.</p>
       <code>
 find
     {cast: [{person: {name: ~= "Wayne Knight"}}]}
