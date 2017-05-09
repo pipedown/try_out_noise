@@ -8,11 +8,15 @@
   </head>
   <body>
     <article>
-      <h3>Welcome to the Noise tutorial</h3>
+      <h3>Welcome to the Noise query language tutorial</h3>
       <p>
-The data set we'll work on is TV shows. Every TV show is one document that contains the data about the show itself, like the name, length and air date. But also the cast and all the episodes.</p>
+        The data set we'll work on is TV shows, from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains the data about the show itself, like the name, length and air date. But also the cast and all the episodes. In all well over a million episodes listed!</p>
       <p>
-    Let's start simple and query for a show where we already know the exact name. Run the query with pushing the "Query"` button.</p>
+        Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query"` button.</p>
+      <p>
+        The dot (.) means return the whole document.
+      <p>
+        Try modifying the query to find your favorite show.</p>
       <code>
 find
     {name: ~= "seinfeld"}
@@ -56,6 +60,7 @@ return
     <article>
       <h3>Order and limit results</h3>
       <p>Find the show with the longest runtime</p>
+      <p>Using 'find {}' means look at every document in the index.</p>
       <code>find
     {}
 order
@@ -68,9 +73,10 @@ limit 1
     <article>
       <h3>Aggregations: count()</h3>
       <p>Find number of shows each country has produced.</p>
+      <p>Some shows don't have a country name. use default="unknown" to return a friendlier string instead of null.</p>
       <code>find {}
 return {
-    country: group(.network.country.name),
+    country: group(.network.country.name) default="unknown",
     shows: count()
 }
       </code>
@@ -78,6 +84,7 @@ return {
     <article>
       <h3>Aggregations: sum()</h3>
       <p>Find number of hours of television each country has produced</p>
+      <p> This query is kind of expensive, because it has to load the runtime field from over a million episodes in the index.</p>
       <code>find {}
 return {
     country: group(.network.country.name) default="unknown",
