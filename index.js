@@ -148,7 +148,7 @@ getLatestShows(Math.floor(nconf.get("last_indexed") / 250));
 const hostname = '0.0.0.0';
 const port = 3000;
 const maxPostSize = 4 * 1024;
-const accessLogFormat = ':ip - :userID [:endDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent"';
+const accessLogFormat = ':Xip - :userID [:endDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent"';
 const escapeNewlineRegexp = /\n|\r\n|\r/g;
 const headers = {
     'Content-Type': "application/json",
