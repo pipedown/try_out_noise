@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="en">
   <head>
     <title>Noise Query Tutorial</title>
     <style type="text/css">
@@ -7,91 +7,150 @@
     </style>
   </head>
   <body>
-    <article>
-      <h3>Welcome to the Noise query language tutorial</h3>
-      <p>
-        The data set we'll work on is TV shows, from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains the data about the show itself, like the name, length and air date. But also the cast and all the episodes. In all well over a million episodes listed!</p>
-      <p>
-        Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query"` button.</p>
-      <p>
-        The dot (.) means return the whole document.
-      <p>
-        Try modifying the query to find your favorite show.</p>
-      <code>
-find
-    {name: ~= "seinfeld"}
-return
-    .
-      </code>
-    </article>
-    <article>
-      <h3>Nested find</h3>
-      <p>
-Find all shows with a specific actor.</p>
-      <p>The cast is an array of objects that contain persons and characters. We mimic the array structure in the query.</p>
-      <p>Modify the query to search shows for you favorite actors.</p>
-      <code>
-find
-    {cast: [{person: {name: ~= "Wayne Knight"}}]}
-return
-    .name
-      </code>
-    </article>
-    <article>
-      <h3>Bind variables</h3>
-      <p>Find all simpsons episodes that mention Troy McClure by using a bind variable.</p>
-      <code>find {
-    name: ~= "The Simpsons",
-    episodes: eps::[{
-        summary: ~= "Troy McClure"
-    }]
+    <div id="tutorial">
+      <h2>Tutorial</h2>
+      <article>
+        <h3>Welcome to the Noise query language tutorial</h3>
+        <p>
+          The data set we'll work on is TV shows, from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains the data about the show itself, like the name, length and air date. But also the cast and all the episodes. In all well over a million episodes listed!</p>
+        <p>
+          Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query"` button.</p>
+        <p>
+          The dot (.) means return the whole document.
+        <p>
+          Try modifying the query to find your favorite show.</p>
+        <code>
+  find
+      {name: ~= "seinfeld"}
+  return
+      .
+        </code>
+      </article>
+      <article>
+        <h3>Nested find</h3>
+        <p>
+  Find all shows with a specific actor.</p>
+        <p>The cast is an array of objects that contain persons and characters. We mimic the array structure in the query.</p>
+        <p>Modify the query to search shows for you favorite actors.</p>
+        <code>
+  find
+      {cast: [{person: {name: ~= "Wayne Knight"}}]}
+  return
+      .name
+        </code>
+      </article>
+      <article>
+        <h3>Bind variables</h3>
+        <p>Find all simpsons episodes that mention Troy McClure by using a bind variable.</p>
+        <code>find {
+      name: ~= "The Simpsons",
+      episodes: eps::[{
+          summary: ~= "Troy McClure"
+      }]
+  }
+  return eps
+        </code>
+      </article>
+      <article>
+        <h3>Query with numbers</h3>
+        <p>Find all the shows with a rating 9 or higher.</p>
+        <code>find
+      {rating: {average: >= 9}}
+  return
+      .name
+        </code>
+      </article>
+      <article>
+        <h3>Order and limit results</h3>
+        <p>Find the show with the longest runtime</p>
+        <p>Using 'find {}' means look at every document in the index.</p>
+        <code>find
+      {}
+  order
+      .runtime desc
+  return
+      {name: .name, runtime: .runtime}
+  limit 1
+        </code>
+      </article>
+      <article>
+        <h3>Aggregations: count()</h3>
+        <p>Find number of shows each country has produced.</p>
+        <p>Some shows don't have a country name. use default="unknown" to return a friendlier string instead of null.</p>
+        <code>find {}
+  return {
+      country: group(.network.country.name) default="unknown",
+      shows: count()
+  }
+        </code>
+      </article>
+      <article>
+        <h3>Aggregations: sum()</h3>
+        <p>Find number of hours of television each country has produced</p>
+        <p> This query is kind of expensive, because it has to load the runtime field from over a million episodes in the index.</p>
+        <code>find {}
+  return {
+      country: group(.network.country.name) default="unknown",
+      total_time: sum(.episodes[].runtime)
+  }
+        </code>
+      </article>
+    </div>
+    <div id="json-schema">
+      <h2>JSON Schema</h2>
+      <code>{
+  "_id": Document Id
+  "cast": [{
+    "character": {
+      "name": Character's name
+      "url": URL to character profile
+    },
+    "person": {
+      "name": Actor's name
+      "url": URL to actor profile
+    }
+  }, {
+    …
+  }],
+  "episodes": [{
+    "airdate": Date in "YYYY-MM-DD" format
+    "airtime": Time in "HH:MM" format
+    "name": Name of the episode
+    "number": Episode number within season, starting with 1
+    "runtime": Integer in minutes with commercials
+    "season": Season, starting with 1
+    "summary": Summary of episode
+    "url": URL to episode
+  }, {
+    …
+  }],
+  "genres": ["Action" || "Adult" || "Adventure" || "Anime" || "Children" || "Comedy" || "Crime" || "DIY" || "Drama" || "Espionage" || "Family" || "Fantasy" || "Food" || "History" || "Horror" || "Legal" || "Medical" || "Music" || "Mystery" || "Nature" || "Romance" || "Science-Fiction" || "Sports" || "Supernatural" || "Thriller" || "Travel" || "War" || "Western"],
+  "language": The original language of the show, e.g. "English"
+  "name": Name of the show
+  "network": {
+    "country": {
+      "code": Country code. e.g. "US"
+      "name": Country name, e.g. "United States"
+      "timezone": e.g. "America/New_York"
+    },
+    "name": Network name, e.g. "CBS"
+  },
+  "premiered": Date in "YYYY-MM-DD" format
+  "rating": {
+    "average": Number from 1.0 to 10.0 || null
+  },
+  "runtime": Integer in minutes with commercials
+  "schedule": {
+    "days": ["Monday" || "Tuesday" || "Wednesday" || "Thursday" || "Friday" || "Saturday" || "Sunday"]
+    "time": 24 hr time in "HH:MM" format
+  },
+  "status": "Ended" || "In Development" || "Running" || "To Be Determined"
+  "summary": Summary of show theme or purpose
+  "type": "Animation" || "Award Show" || "Documentary" || "Game Show" || "News" || "Reality" || "Scripted" || "Sports" || "Talk Show" || "Variety"
+  "url": URL to tvmaze.com show web page
+  "webChannel": The same as the "network" field
 }
-return eps
       </code>
-    </article>
-    <article>
-      <h3>Query with numbers</h3>
-      <p>Find all the shows with a rating 9 or higher.</p>
-      <code>find
-    {rating: {average: >= 9}}
-return
-    .name
-      </code>
-    </article>
-    <article>
-      <h3>Order and limit results</h3>
-      <p>Find the show with the longest runtime</p>
-      <p>Using 'find {}' means look at every document in the index.</p>
-      <code>find
-    {}
-order
-    .runtime desc
-return
-    {name: .name, runtime: .runtime}
-limit 1
-      </code>
-    </article>
-    <article>
-      <h3>Aggregations: count()</h3>
-      <p>Find number of shows each country has produced.</p>
-      <p>Some shows don't have a country name. use default="unknown" to return a friendlier string instead of null.</p>
-      <code>find {}
-return {
-    country: group(.network.country.name) default="unknown",
-    shows: count()
-}
-      </code>
-    </article>
-    <article>
-      <h3>Aggregations: sum()</h3>
-      <p>Find number of hours of television each country has produced</p>
-      <p> This query is kind of expensive, because it has to load the runtime field from over a million episodes in the index.</p>
-      <code>find {}
-return {
-    country: group(.network.country.name) default="unknown",
-    total_time: sum(.episodes[].runtime)
-}
-      </code>
-    </article>
+    </div>
   </body>
 </html>

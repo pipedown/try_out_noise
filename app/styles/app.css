@@ -94,7 +94,38 @@ h1 a:active {
   width: 40%;
 }
 
-#noise-description {
+.nav {
+  border-bottom: 12px solid #eee;
+  box-sizing: border-box;
+  display: table;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  right: 6px;
+  table-layout: fixed;
+  text-align: center;
+  width: calc(100% - 2rem - 6px);
+}
+
+.nav li {
+  display: table-cell;
+  padding: 0.25rem 0;
+}
+
+.nav li.active {
+  background-color: #eee;
+}
+
+.nav li a:link,
+.nav li a:visited,
+.nav li a:hover,
+.nav li a:active {
+  color: #000;
+  text-decoration: none;
+}
+
+.info {
   background-color: #ddd;
   border-left: solid 16px #eee;
   border-right: solid 6px #555;
@@ -104,7 +135,19 @@ h1 a:active {
   padding: 0.5rem;
   position: absolute;
   right: 0;
-  top: 0;
+  top: 2.2rem;
+}
+
+#noise-schema {
+  font-size: 60%;
+}
+
+#noise-toc a {
+  text-decoration: none;
+}
+
+#noise-toc a:hover {
+  text-decoration: underline;
 }
 
 #noise-pager {

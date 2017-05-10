@@ -1,6 +1,15 @@
 <div id="noise-description-and-pager">
-  <div id="noise-description">
-    {{{description}}}
-  </div>
+  <ol class="nav">
+    {{#link-to "demo.description" tagName="li"}}
+      {{#link-to "demo.description"}}Description{{/link-to}}
+    {{/link-to}}
+    {{#link-to "demo.schema" tagName="li"}}
+      {{#link-to "demo.schema"}}JSON&#160;Schema{{/link-to}}
+    {{/link-to}}
+    {{#link-to "demo.toc" tagName="li"}}
+      {{#link-to "demo.toc"}}Contents{{/link-to}}
+    {{/link-to}}
+  </ol>
+  {{outlet}}
   {{noise-pager next=next prev=prev}}
 </div>

@@ -22,6 +22,7 @@ export default Ember.Route.extend({
     }
 
     return {
+      pageNo: pageNo,
       current: {
         query: tutorial.queries[pageNo],
         description: tutorial.descriptions[pageNo],
@@ -29,5 +30,9 @@ export default Ember.Route.extend({
       next,
       prev
     };
+  },
+  afterModel(model) {
+    // Always show the description when hitting a demo page
+    this.replaceWith('demo.description', model.pageNo);
   }
 });

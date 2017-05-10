@@ -13,6 +13,9 @@ export default Ember.Route.extend({
   // is at index `1` to have nice URLs and easier logic
   titles: null,
 
+  // A HTML block that contains the JSON schema description
+  schema: null,
+
   beforeModel() {
     return fetch('/assets/html/tutorial.html').then(response => {
       return response.text();
@@ -27,22 +30,23 @@ export default Ember.Route.extend({
       const dom = Ember.$('<body>').append(text);
 
       // Extract code tags that contain the queries
-      const codeTags = dom.find('code');
+      const codeTags = dom.find('#tutorial code');
 
       // Remove the code tags from the DOM as we only want the descriptions
       codeTags.remove();
 
       // Extract the article tags that contain the descriptions
-      const articleTags = dom.find('article');
+      const articleTags = dom.find('#tutorial article');
 
       // Extract the h3 tags that contain the titles
-      const h3Tags = dom.find('h3');
+      const h3Tags = dom.find('#tutorial h3');
 
       // The first element is a dummy element so that we can start
       // enumerating the tutorial steps starting with 1.
       let queries = [null];
       let descriptions = [null];
       let titles = [null];
+      const schema = dom.find('#json-schema code').text().trim();
 
       // Re-combine the queries and the descriptions as JSON
       articleTags.each((ii, articleTag) => {
@@ -53,13 +57,15 @@ export default Ember.Route.extend({
       this.set('queries', queries);
       this.set('descriptions', descriptions);
       this.set('titles', titles);
+      this.set('schema', schema);
     });
   },
   model() {
     return {
       queries: this.get('queries'),
       descriptions: this.get('descriptions'),
-      titles: this.get('titles')
+      titles: this.get('titles'),
+      schema: this.get('schema')
     };
   }
 });

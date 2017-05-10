@@ -1,0 +1,9 @@
+<div id="noise-toc" class="info">
+  <ol>
+    {{#each model as |title index|}}
+      {{#if index}}
+        <li>{{#link-to 'demo.description' index}}{{title}}{{/link-to}}</li>
+      {{/if}}
+    {{/each}}
+  </ol>
+</div>
