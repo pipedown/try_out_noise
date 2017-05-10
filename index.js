@@ -145,7 +145,7 @@ getLatestShows(Math.floor(nconf.get("last_indexed") / 250));
 
 // start the webserver
 
-const hostname = '0.0.0.0';
+const hostname = '127.0.0.1';
 const port = 3000;
 const maxPostSize = 4 * 1024;
 const accessLogFormat = ':Xip - :userID [:endDate] ":method :url :protocol/:httpVersion" :statusCode :contentLength ":referer" ":userAgent"';
