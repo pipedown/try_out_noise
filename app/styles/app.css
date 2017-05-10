@@ -205,8 +205,54 @@ h1 a:active {
   top: 9rem;
 }
 
-.no-results {
+.results-no {
   font-style: italic;
+}
+
+.results-waiting {
+  font-style: italic;
+  opacity: 0;
+  transition: opacity 100ms linear;
+}
+
+.results-waiting.show {
+  opacity: 1;
+}
+
+@keyframes blink2 {
+  0% {
+    opacity: 0;
+  }
+
+  33% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink3 {
+  0% {
+    opacity: 0;
+  }
+
+  66% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.results-waiting span:nth-child(2) {
+  animation: 2s blink2 step-end infinite;
+}
+
+.results-waiting span:nth-child(3) {
+  animation: 2s blink3 step-end infinite;
 }
 
 code {

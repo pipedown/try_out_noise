@@ -18,6 +18,9 @@ export default Ember.Component.extend({
         .fail(error => {
           this.set('results', [error.responseJSON]);
         });
+      // This one is not done directly in the template as there should be
+      // an opacity transition to prevent flicker on very fast queries.
+      this.$().find('.results-waiting').addClass('show');
     }
   },
 
