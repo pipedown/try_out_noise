@@ -259,12 +259,7 @@ h1 a:active {
 
 .results-waiting {
   font-style: italic;
-  opacity: 0;
   transition: opacity 100ms linear;
-}
-
-.results-waiting.show {
-  opacity: 1;
 }
 
 @keyframes blink2 {

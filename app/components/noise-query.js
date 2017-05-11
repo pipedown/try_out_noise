@@ -11,16 +11,14 @@ export default Ember.Component.extend({
   actions: {
     doQuery() {
       const query = this.$('textarea').val();
-      Ember.$.post(ENV.noiseUrl, query).
-        done(data => {
+      Ember.$.post(ENV.noiseUrl, query)
+        .done(data => {
           this.set('results', data);
         })
         .fail(error => {
           this.set('results', [error.responseJSON]);
         });
-      // This one is not done directly in the template as there should be
-      // an opacity transition to prevent flicker on very fast queries.
-      this.$().find('.results-waiting').addClass('show');
+      this.set('results', 'in-progress');
     }
   },
 
