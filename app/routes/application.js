@@ -17,9 +17,7 @@ export default Ember.Route.extend({
   schema: null,
 
   beforeModel() {
-    return fetch('/assets/html/tutorial.html').then(response => {
-      return response.text();
-    }).then(text => {
+    return Ember.$.get('/assets/html/tutorial.html').done(text => {
       // The returned value is a full HTML document. If the dom is created
       // with just calling `$(text)`, then the top level elements would be the
       // children of the `<body>` (and not the full HTML tree as expected).
