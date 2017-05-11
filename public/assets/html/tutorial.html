@@ -215,20 +215,6 @@ return
         </code>
       </article>
       <article>
-        <h3>Order and limit results</h3>
-        <p>Find the show with the longest runtime</p>
-        <p>Using 'find {}' means look at every document in the index.</p>
-        <code>
-find
-    {}
-order
-    .runtime desc
-return
-    {name: .name, runtime: .runtime}
-limit 1
-        </code>
-      </article>
-      <article>
         <h3>Aggregations: count()</h3>
         <p>Find number of shows each country has produced.</p>
         <p>Some shows don't have a country name. use default="unknown" to return a friendlier string instead of null.</p>
