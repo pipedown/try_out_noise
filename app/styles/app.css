@@ -138,8 +138,13 @@ h1 a:active {
   top: 2.2rem;
 }
 
+#noise-description code {
+  background-color: #eee;
+  padding: 0 0.25rem;
+}
+
 #noise-schema {
-  font-size: 60%;
+  font-size: 80%;
 }
 
 #noise-toc a {
@@ -299,6 +304,7 @@ h1 a:active {
 }
 
 code {
+  font-size: 80%;
   white-space: pre-wrap;
 }
 
@@ -306,7 +312,7 @@ code {
   background-color: #f3f3f3;
   border: 1px solid #ddd;
   border-bottom: solid #999 2px;
-  font-size: 60%;
+  font-size: 80%;
   margin: 0 0.5rem 1rem 0;
   padding: 0.5rem;
 }

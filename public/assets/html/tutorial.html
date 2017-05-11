@@ -14,11 +14,11 @@
         <p>
           The data set we'll work on is TV shows, imported from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains information about the show itself, like the name, length and network. But also the cast and all the episodes. In all well over a million episodes listed!</p>
         <p>
-          Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query"` button.</p>
+          Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query" button.</p>
         <p>
-            The `~=` operator is for full text matching, which uses stemming to find words with common root words in the field.</p>
+            The <code>~=</code> operator is for full text matching, which uses stemming to find words with common root words in the field.</p>
         <p>
-          The `return .` means return the whole document. If you leave off the return clause the query returns the _id of the docuemnt.</p>
+          The <code>return .</code> means return the whole document. If you leave off the return clause the query returns the _id of the docuemnt.</p>
         <p>
           Try modifying the query to find your favorite show.</p>
         <code>
@@ -30,9 +30,9 @@ return
       </article>
       <article>
         <h3>Phrase Match</h3>
-        <p>Using `~=` operator with a phase (multiple words in order) will find documents with fields that contain the phrase.</p>
+        <p>Using <code>~=</code> operator with a phase (multiple words in order) will find documents with fields that contain the phrase.</p>
         <p>This example finds multiple shows whose name field contain the words "star trek".</p>
-        <p>The `return .name` means return the full name of the show.</p>
+        <p>The <code>return .name</code> means return the full name of the show.</p>
         <code>
 find
     {name: ~= "star trek"}
@@ -42,7 +42,7 @@ return
       </article>
       <article>
         <h3>Proximity Match</h3>
-        <p>Using the `~N=` operator where N is an integer turns it into a proximity match operator. Which means it matches if the the words in the query are N or less words away from each other. Here we have a query where "crime" and "family" can have no more than 5 words between them.</p>
+        <p>Using the <code>~N=</code> operator where N is an integer turns it into a proximity match operator. Which means it matches if the the words in the query are N or less words away from each other. Here we have a query where "crime" and "family" can have no more than 5 words between them.</p>
         <p>If you set the distance to 0, then the two words must be besides each other, but any order.</p>
         <code>
 find
@@ -53,7 +53,7 @@ return
       </article>
       <article>
         <h3>Find in Arrays</h3>
-        <p>The `genres` field contains an array of genres that apply to the show. If we want to find all shows for a particular genre, we have to let it know to look in the array for the value.</p>
+        <p>The <code>genres</code> field contains an array of genres that apply to the show. If we want to find all shows for a particular genre, we have to let it know to look in the array for the value.</p>
         <code>
 find
     {genres: [ == "Crime"]}
@@ -73,7 +73,7 @@ return
       </article>
       <article>
         <h3>Boolean Operators 1</h3>
-        <p>To have multiple criteria you can join them with `&&` or `||` operators. Here we want to find shows that have both comedy and crime genres. If we change `&&` to `||` it will find shows that are either.</p>
+        <p>To have multiple criteria you can join them with <code>&&</code> or <code>||</code> operators. Here we want to find shows that have both comedy and crime genres. If we change <code>&&</code> to <code>||</code> it will find shows that are either.</p>
         <code>
 find
     {genres: [ == "Crime"] && genres: [ == "Comedy"]}
@@ -83,7 +83,7 @@ return
       </article>
       <article>
         <h3>Boolean Operators 2</h3>
-        <p>Here we are looking for shows that are either "Crime Comedy" or "Crime Music" using `&&`, `||` and parenthesis to group the criteria.</p>
+        <p>Here we are looking for shows that are either "Crime Comedy" or "Crime Music" using <code>&&</code>, <code>||</code> and parenthesis to group the criteria.</p>
         <code>
 find
     {
@@ -96,7 +96,7 @@ return
       </article>
       <article>
         <h3>Boolean Operators 3</h3>
-        <p>Here is another way to write same query but using separate objects with a `||` between them. It's exactly equivelent but perhaps easier to read.</p>
+        <p>Here is another way to write same query but using separate objects with a <code>||</code> between them. It's exactly equivelent but perhaps easier to read.</p>
         <code>
 find
     {genres: [ == "Crime"] && genres: [ == "Comedy"]} ||
@@ -107,8 +107,8 @@ return
       </article>
       <article>
         <h3>Not Operator</h3>
-        <p>You can use the `!` operator to negate any criteria. Here we want to find Comedy-Music shows that are not currently running.</p>
-        <p>Remove the `!` operator to get all the Comedy-Music shows that are currently running.</p>
+        <p>You can use the <code>!</code> operator to negate any criteria. Here we want to find Comedy-Music shows that are not currently running.</p>
+        <p>Remove the <code>!</code> operator to get all the Comedy-Music shows that are currently running.</p>
         <p>Note: You must have at least one non-negated clause in the query or you will get an error.
         <code>
 find
@@ -120,7 +120,7 @@ return
       <article>
         <h3>Order and Limit Results</h3>
         <p>Using the order clause you can order results by values found in the documents.</p>
-        <p>Using 'find {}' means look at every document in the index.</p>
+        <p>Using <code>find {}</code> means look at every document in the index.</p>
         <p>This examples looks at at every show and returns the 10 longest runtimes.</p>
         <code>
 find
@@ -134,7 +134,7 @@ limit 10
       </article>
       <article>
         <h3>Relevency Scoring</h3>
-        <p>Noise uses Term Frequency/Inverse Document Frequency (TF/IDF) scoring system, similar to Lucene. Use the `score()` function to get the score, and use in the order clause with `desc` to order the most relevent first.</p>
+        <p>Noise uses Term Frequency/Inverse Document Frequency (TF/IDF) scoring system, similar to Lucene. Use the <code>score()</code> function to get the score, and use in the order clause with <code>desc</code> to order the most relevent first.</p>
         <code>
 find
     {summary: ~= "trial", name: ~= "trial"}
@@ -146,7 +146,7 @@ return
       </article>
       <article>
         <h3>Relevency Scoring: Boosting</h3>
-        <p>You can boost the score by using the `^` operator follow by a boost factor.</p>
+        <p>You can boost the score by using the <code>^</code> operator follow by a boost factor.</p>
         <p>Here we boost any result where the summary also contains the word crime.</p>
         <code>
 find
@@ -173,7 +173,7 @@ return
       </article>
       <article>
         <h3>Return a Field from All Nested Objects</h3>
-        <p>You can return all fields from a nested object using `[]`.</p>
+        <p>You can return all fields from a nested object using <code>[]</code>.</p>
         <code>
 find
     {summary: ~= "trial"}

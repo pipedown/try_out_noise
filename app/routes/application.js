@@ -28,7 +28,7 @@ export default Ember.Route.extend({
       const dom = Ember.$('<body>').append(text);
 
       // Extract code tags that contain the queries
-      const codeTags = dom.find('#tutorial code');
+      const codeTags = dom.find('#tutorial article > code');
 
       // Remove the code tags from the DOM as we only want the descriptions
       codeTags.remove();
