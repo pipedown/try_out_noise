@@ -338,6 +338,7 @@ code {
   body > div {
     height: auto;
     padding-top: 1rem;
+    width: auto;
   }
 
   h1 {
