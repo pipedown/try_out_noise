@@ -342,7 +342,9 @@ code {
   }
 
   h1 {
+    min-width: auto;
     position: relative;
+    width: calc(100% - 4.5rem);
   }
 
   .nav {
@@ -355,12 +357,33 @@ code {
   #noise-pager,
   #noise-result,
   .footer {
+    min-width: auto;
     position: inherit;
   }
 
   #noise-description-and-pager {
     float: none;
     width: auto;
+  }
+
+  #noise-query {
+    margin: 0.5rem 0.25rem;
+    max-width: 32rem;
+    min-width: auto;
+  }
+
+  #noise-query > * {
+    display: block;
+  }
+
+  #noise-query textarea {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  #noise-query button {
+    float: right;
+    margin: 0.5rem;
   }
 
   #noise-pager {
@@ -372,16 +395,18 @@ code {
     float: none;
     height: inherit;
     margin: 0;
-    padding-bottom: 2rem;
+    min-width: auto;
     width: auto;
   }
 
   #noise-result {
+    clear: both;
     margin-left: 0.5rem;
-    top: 2rem;
+    top: 0;
   }
 
   .footer {
+    margin-top: 0.5rem;
     text-align: center;
   }
 
