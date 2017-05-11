@@ -51,6 +51,7 @@ textarea {
 body > div {
   height: calc(100% - 1rem);
   padding-top: 1rem;
+  width: calc(100% - 4rem);
 }
 
 h1 {
@@ -64,7 +65,6 @@ h1 {
   padding: 0.25rem 1rem;
   position: relative;
   width: calc(100% - 8.5rem);
-  z-index: 5;
 }
 
 h1::after {
@@ -212,7 +212,6 @@ h1 a:active {
   margin-top: -2.5rem;
   position: relative;
   width: 60%;
-  z-index: 5;
 }
 
 #noise-query {
@@ -314,27 +313,28 @@ code {
 
 .footer {
   font-style: italic;
-  left: 0;
-  min-width: 29rem;
+  list-style: none;
+  margin: 1.6rem 0 0;
+  padding: 0;
   position: absolute;
+  right: 0;
   text-align: right;
   top: 0;
-  width: 100%;
+}
+
+.footer li {
+  padding: 0.25rem 1.6rem 0 0;
 }
 
 .footer a {
-  display: inline-block;
-  padding: 1.3rem;
-  position: relative;
   text-decoration: none;
-  z-index: 5;
 }
 
 .about {
   margin: 0 2rem;
 }
 
-@media (max-width: 57rem) {
+@media (max-width: 62rem) {
   body > div {
     height: auto;
     padding-top: 1rem;
@@ -352,7 +352,8 @@ code {
   .nav,
   .info,
   #noise-pager,
-  #noise-result {
+  #noise-result,
+  .footer {
     position: inherit;
   }
 
@@ -377,5 +378,14 @@ code {
   #noise-result {
     margin-left: 0.5rem;
     top: 2rem;
+  }
+
+  .footer {
+    text-align: center;
+  }
+
+  .footer li {
+    display: inline-block;
+    padding: 0.5rem;
   }
 }
