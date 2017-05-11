@@ -1,14 +1,4 @@
 {{noise-tutorial description=model.current.description
                  next=model.next
                  prev=model.prev}}
-{{#noise-query query=model.current.query as |results|}}
-  {{#if results}}
-    {{#each results as |show|}}
-      {{noise-result show=show}}
-    {{/each}}
-  {{else if (eq results.length 0)}}
-    <div class="results-no">The query didn't return any results.</div>
-  {{else}}
-    <div class="results-waiting">Query is in progress<span>.</span><span>.</span><span>.</span></div>
-  {{/if}}
-{{/noise-query}}
+{{noise-query query=model.current.query}}
