@@ -12,87 +12,244 @@
       <article>
         <h3>Welcome to the Noise query language tutorial</h3>
         <p>
-          The data set we'll work on is TV shows, from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains the data about the show itself, like the name, length and air date. But also the cast and all the episodes. In all well over a million episodes listed!</p>
+          The data set we'll work on is TV shows, imported from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains information about the show itself, like the name, length and network. But also the cast and all the episodes. In all well over a million episodes listed!</p>
         <p>
           Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query"` button.</p>
         <p>
-          The dot (.) means return the whole document.
+            The `~=` operator is for full text matching, which uses stemming to find words with common root words in the field.</p>
+        <p>
+          The `return .` means return the whole document. If you leave off the return clause the query returns the _id of the docuemnt.</p>
         <p>
           Try modifying the query to find your favorite show.</p>
         <code>
-  find
-      {name: ~= "seinfeld"}
-  return
-      .
+find
+    {name: ~= "seinfeld"}
+return
+    .
         </code>
       </article>
       <article>
-        <h3>Nested find</h3>
-        <p>
-  Find all shows with a specific actor.</p>
-        <p>The cast is an array of objects that contain persons and characters. We mimic the array structure in the query.</p>
-        <p>Modify the query to search shows for you favorite actors.</p>
+        <h3>Phrase Match</h3>
+        <p>Using `~=` operator with a phase (multiple words in order) will find documents with fields that contain the phrase.</p>
+        <p>This example finds multiple shows whose name field contain the words "star trek".</p>
+        <p>The `return .name` means return the full name of the show.</p>
         <code>
-  find
-      {cast: [{person: {name: ~= "Wayne Knight"}}]}
-  return
-      .name
+find
+    {name: ~= "star trek"}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Proximity Match</h3>
+        <p>Using the `~N=` operator where N is an integer turns it into a proximity match operator. Which means it matches if the the words in the query are N or less words away from each other. Here we have a query where "crime" and "family" can have no more than 5 words between them.</p>
+        <p>If you set the distance to 0, then the two words must be besides each other, but any order.</p>
+        <code>
+find
+    {summary: ~5= "crime family"}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Find in Arrays</h3>
+        <p>The `genres` field contains an array of genres that apply to the show. If we want to find all shows for a particular genre, we have to let it know to look in the array for the value.</p>
+        <code>
+find
+    {genres: [ == "Crime"]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Find in Arrays: Nested Objects 1</h3>
+        <p>Let's find shows with episodes that mention trial in the episode name.</p>
+        <code>
+find
+    {episodes: [{name: ~= "trial"}]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Boolean Operators 1</h3>
+        <p>To have multiple criteria you can join them with `&&` or `||` operators. Here we want to find shows that have both comedy and crime genres. If we change `&&` to `||` it will find shows that are either.</p>
+        <code>
+find
+    {genres: [ == "Crime"] && genres: [ == "Comedy"]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Boolean Operators 2</h3>
+        <p>Here we are looking for shows that are either "Crime Comedy" or "Crime Music" using `&&`, `||` and parenthesis to group the criteria.</p>
+        <code>
+find
+    {
+      (genres: [ == "Crime"] && genres: [ == "Comedy"]) ||
+      (genres: [ == "Crime"] && genres: [ == "Music"])
+    }
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Boolean Operators 3</h3>
+        <p>Here is another way to write same query but using separate objects with a `||` between them. It's exactly equivelent but perhaps easier to read.</p>
+        <code>
+find
+    {genres: [ == "Crime"] && genres: [ == "Comedy"]} ||
+    {genres: [ == "Crime"] && genres: [ == "Music"]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Not Operator</h3>
+        <p>You can use the `!` operator to negate any criteria. Here we want to find Comedy-Music shows that are not currently running.</p>
+        <p>Remove the `!` operator to get all the Comedy-Music shows that are currently running.</p>
+        <p>Note: You must have at least one non-negated clause in the query or you will get an error.
+        <code>
+find
+    {genres: [ == "Comedy"] && genres: [ == "Music"] && status: !== "Running"}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Order and Limit Results</h3>
+        <p>Using the order clause you can order results by values found in the documents.</p>
+        <p>Using 'find {}' means look at every document in the index.</p>
+        <p>This examples looks at at every show and returns the 10 longest runtimes.</p>
+        <code>
+find
+    {}
+order
+    .runtime desc
+return
+    {name: .name, runtime: .runtime}
+limit 10
+        </code>
+      </article>
+      <article>
+        <h3>Relevency Scoring</h3>
+        <p>Noise uses Term Frequency/Inverse Document Frequency (TF/IDF) scoring system, similar to Lucene. Use the `score()` function to get the score, and use in the order clause with `desc` to order the most relevent first.</p>
+        <code>
+find
+    {summary: ~= "trial", name: ~= "trial"}
+order
+    score() desc
+return
+    {name: .name, score: score()}
+        </code>
+      </article>
+      <article>
+        <h3>Relevency Scoring: Boosting</h3>
+        <p>You can boost the score by using the `^` operator follow by a boost factor.</p>
+        <p>Here we boost any result where the summary also contains the word crime</p>
+        <code>
+find
+    {summary: ~= "trial", name: ~= "trial" ||
+    summary: ~= "crime"^2}
+order
+    score() desc
+return
+    {name: .name, score: score()}
+        </code>
+      </article>
+      <article>
+        <h3>Relevency Scoring: Boosting 2</h3>
+        <p>You can boost multiple criteria by enclosing them in parethesis.</p>
+        <code>
+find
+    {summary: ~= "trial", name: ~= "trial" ||
+    (summary: ~= "crime" && name ~= "crime")^2}
+order
+    score() desc
+return
+    {name: .name, score: score()}
+        </code>
+      </article>
+      <article>
+        <h3>Return a Field from All Nested Objects</h3>
+        <p>You can return all fields from a nested object using `[]`.</p>
+        <code>
+find
+    {summary: ~= "trial"}
+return
+    {name: .name, runtimes: .episodes[].runtime}
+        </code>
+      </article>
+      <article>
+        <h3>Aggregates: Group and Sum</h3>
+        <p>For each show that is about a trial, lets firgure out the total runtime of all episodes for that show.</p>
+        <code>
+find
+    {summary: ~= "trial"}
+return
+    {name: group(.name), total_runtime: sum(.episodes[].runtime)}
         </code>
       </article>
       <article>
         <h3>Bind variables</h3>
         <p>Find all simpsons episodes that mention Troy McClure by using a bind variable.</p>
-        <code>find {
-      name: ~= "The Simpsons",
-      episodes: eps::[{
-          summary: ~= "Troy McClure"
-      }]
-  }
-  return eps
+        <code>
+find {
+    name: ~= "The Simpsons",
+    episodes: eps::[{
+        summary: ~= "Troy McClure"
+    }]
+}
+return eps
         </code>
       </article>
       <article>
-        <h3>Query with numbers</h3>
-        <p>Find all the shows with a rating 9 or higher.</p>
-        <code>find
-      {rating: {average: >= 9}}
-  return
-      .name
+        <h3>Bind Variables and Aggregates</h3>
+        <p>Let's figure out the total runtime of episodes for a show where the episodes have a "trial" in the episode summary</p>
+        <code>
+find
+    {episodes: eps::[{summary: ~= "trial"}]}
+return
+    {name: group(.name), total_runtime: sum(eps.runtime)}
         </code>
       </article>
       <article>
         <h3>Order and limit results</h3>
         <p>Find the show with the longest runtime</p>
         <p>Using 'find {}' means look at every document in the index.</p>
-        <code>find
-      {}
-  order
-      .runtime desc
-  return
-      {name: .name, runtime: .runtime}
-  limit 1
+        <code>
+find
+    {}
+order
+    .runtime desc
+return
+    {name: .name, runtime: .runtime}
+limit 1
         </code>
       </article>
       <article>
         <h3>Aggregations: count()</h3>
         <p>Find number of shows each country has produced.</p>
         <p>Some shows don't have a country name. use default="unknown" to return a friendlier string instead of null.</p>
-        <code>find {}
-  return {
-      country: group(.network.country.name) default="unknown",
-      shows: count()
-  }
+        <code>
+find {}
+return {
+    country: group(.network.country.name) default="unknown",
+    shows: count()
+}
         </code>
       </article>
       <article>
         <h3>Aggregations: sum()</h3>
         <p>Find number of hours of television each country has produced</p>
-        <p> This query is kind of expensive, because it has to load the runtime field from over a million episodes in the index.</p>
-        <code>find {}
-  return {
-      country: group(.network.country.name) default="unknown",
-      total_time: sum(.episodes[].runtime)
-  }
+        <p> This query is rather expensive, because it has to load the runtime field from over a million episodes in the index!</p>
+        <code>
+find {}
+return {
+    country: group(.network.country.name) default="unknown",
+    total_time: sum(.episodes[].runtime)
+}
         </code>
       </article>
     </div>
