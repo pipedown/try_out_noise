@@ -164,7 +164,7 @@ return
         <code>
 find
     {summary: ~= "trial", name: ~= "trial" ||
-    (summary: ~= "crime" && name ~= "crime")^2}
+    (summary: ~= "crime" && name: ~= "crime")^2}
 order
     score() desc
 return
