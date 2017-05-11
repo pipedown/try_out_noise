@@ -333,3 +333,49 @@ code {
 .about {
   margin: 0 2rem;
 }
+
+@media (max-width: 57rem) {
+  body > div {
+    height: auto;
+    padding-top: 1rem;
+  }
+
+  h1 {
+    position: relative;
+  }
+
+  .nav {
+    width: calc(100% - 6px);
+  }
+
+  #noise-description-and-pager,
+  .nav,
+  .info,
+  #noise-pager,
+  #noise-result {
+    position: inherit;
+  }
+
+  #noise-description-and-pager {
+    float: none;
+    width: auto;
+  }
+
+  #noise-pager {
+    margin: 0.5rem 0;
+    overflow: auto;
+  }
+
+  .noise-query-and-results {
+    float: none;
+    height: inherit;
+    margin: 0;
+    padding-bottom: 2rem;
+    width: auto;
+  }
+
+  #noise-result {
+    margin-left: 0.5rem;
+    top: 2rem;
+  }
+}
