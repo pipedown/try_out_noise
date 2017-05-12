@@ -1,0 +1,318 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <title>Noise Query Tutorial</title>
+    <style type="text/css">
+      code { white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <div id="tutorial">
+      <h2>Tutorial</h2>
+      <article>
+        <h3>Welcome to the Noise query language tutorial</h3>
+        <p>
+          The data set we'll work on is TV shows, imported from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Each TV show (over 28,000!) is one document that contains information about the show itself, like the name, length and network. But also the cast and all the episodes. In all well over a million episodes listed!</p>
+        <p>
+          Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query" button.</p>
+        <p>
+            The <code>~=</code> operator is for full text matching, which uses stemming to find words with common root words in the field.</p>
+        <p>
+          The <code>return .</code> means return the whole document. If you leave off the return clause the query returns the _id of the document.</p>
+        <p>
+          Try modifying the query to find your favorite show.</p>
+        <code>
+find
+    {name: ~= "seinfeld"}
+return
+    .
+        </code>
+      </article>
+      <article>
+        <h3>Phrase Match</h3>
+        <p>Using <code>~=</code> operator with a phase (multiple words in order) will find documents with fields that contain the phrase.</p>
+        <p>This example finds multiple shows whose name field contain the words "star trek".</p>
+        <p>The <code>return .name</code> means return the full name of the show.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Proximity Match</h3>
+        <p>Using the <code>~N=</code> operator where N is an integer turns it into a proximity match operator. Which means it matches if the the words in the query are N or less words away from each other. Here we have a query where "crime" and "family" can have no more than 5 words between them.</p>
+        <p>If you set the distance to 0, then the two words must be besides each other, but any order.</p>
+        <code>
+find
+    {summary: ~5= "crime family"}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Find in Arrays</h3>
+        <p>The <code>genres</code> field contains an array of genres that apply to the show. If we want to find all shows for a particular genre, we have to let it know to look in the array for the value.</p>
+        <code>
+find
+    {genres: [ == "Crime"]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Find in Arrays: Nested Objects 1</h3>
+        <p>Let's find shows with episodes that mention trial in the episode name.</p>
+        <code>
+find
+    {episodes: [{name: ~= "trial"}]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Boolean Operators 1</h3>
+        <p>To have multiple criteria you can join them with <code>&&</code> or <code>||</code> operators. Here we want to find shows that have both comedy and crime genres. If we change <code>&&</code> to <code>||</code> it will find shows that are either.</p>
+        <code>
+find
+    {genres: [ == "Crime"] && genres: [ == "Comedy"]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Boolean Operators 2</h3>
+        <p>Here we are looking for shows that are either "Crime Comedy" or "Crime Music" using <code>&&</code>, <code>||</code> and parenthesis to group the criteria.</p>
+        <code>
+find
+    {
+      (genres: [ == "Crime"] && genres: [ == "Comedy"]) ||
+      (genres: [ == "Crime"] && genres: [ == "Music"])
+    }
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Boolean Operators 3</h3>
+        <p>Here is another way to write same query but using separate objects with a <code>||</code> between them. It's exactly equivelent but perhaps easier to read.</p>
+        <code>
+find
+    {genres: [ == "Crime"] && genres: [ == "Comedy"]} ||
+    {genres: [ == "Crime"] && genres: [ == "Music"]}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Not Operator</h3>
+        <p>You can use the <code>!</code> operator to negate any criteria. Here we want to find Comedy-Music shows that are not currently running.</p>
+        <p>Remove the <code>!</code> operator to get all the Comedy-Music shows that are currently running.</p>
+        <p>Note: You must have at least one non-negated clause in the query or you will get an error.</p>
+        <code>
+find
+    {genres: [ == "Comedy"] && genres: [ == "Music"] && status: !== "Running"}
+return
+    .name
+        </code>
+      </article>
+      <article>
+        <h3>Formating Results as Objects</h3>
+        <p>In the return statement you can format result fields in json objects.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    {name: .name, status: .status}
+        </code>
+      </article>
+      <article>
+        <h3>Formating Results as Arrays</h3>
+        <p>You can format the same results in arrays. You can also format the results as complex nested objects and arrays if you want.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    [.name, .status]
+        </code>
+      </article>
+      <article>
+        <h3>Order and Limit Results</h3>
+        <p>Using the order clause you can order results by values found in the documents.</p>
+        <p>Using <code>find {}</code> means look at every document in the index.</p>
+        <p>This examples looks at at every show and returns the 10 longest runtimes.</p>
+        <code>
+find
+    {}
+order
+    .runtime desc
+return
+    {name: .name, runtime: .runtime}
+limit
+    10
+        </code>
+      </article>
+      <article>
+        <h3>Relevancy Scoring</h3>
+        <p>Noise uses Term Frequency/Inverse Document Frequency (TF/IDF) scoring system, similar to Lucene. Use the <code>score()</code> function to get the score, and use in the order clause with <code>desc</code> to order the most relevant first.</p>
+        <code>
+find
+    {summary: ~= "trial", name: ~= "trial"}
+order
+    score() desc
+return
+    {name: .name, score: score()}
+        </code>
+      </article>
+      <article>
+        <h3>Relevancy Scoring: Boosting</h3>
+        <p>You can boost the score by using the <code>^</code> operator follow by a boost factor.</p>
+        <p>Here we boost any result 2x where the summary also contains the word "crime".</p>
+        <code>
+find
+    {summary: ~= "trial", name: ~= "trial" ||
+    summary: ~= "crime"^2}
+order
+    score() desc
+return
+    {name: .name, score: score()}
+        </code>
+      </article>
+      <article>
+        <h3>Relevency Scoring: Boosting 2</h3>
+        <p>You can boost multiple criteria by enclosing them in parethesis.</p>
+        <code>
+find
+    {summary: ~= "trial", name: ~= "trial" ||
+    (summary: ~= "crime" && name: ~= "crime")^2}
+order
+    score() desc
+return
+    {name: .name, score: score()}
+        </code>
+      </article>
+      <article>
+        <h3>Return a Field from All Nested Objects</h3>
+        <p>You can return all fields from a nested object using <code>[]</code>.</p>
+        <code>
+find
+    {summary: ~= "trial"}
+return
+    {name: .name, runtimes: .episodes[].runtime}
+        </code>
+      </article>
+      <article>
+        <h3>Aggregates: Group and Sum</h3>
+        <p>For each show that is about a trial, lets firgure out the total runtime of all episodes for that show.</p>
+        <code>
+find
+    {summary: ~= "trial"}
+return
+    {name: group(.name), total_runtime: sum(.episodes[].runtime)}
+        </code>
+      </article>
+      <article>
+        <h3>Bind variables</h3>
+        <p>Bind variables are used to capture matching elements in an array. The matching elements can then be used in return clauses. Before the array, add <code>VariableName::</code> to indicate you wish to capture matching elements. Then use the same variable in the return statement.</p>
+        <p>Here we find all Simpsons episodes that mention Troy McClure.</p>
+        <code>
+find {
+    name: ~= "The Simpsons",
+    episodes: eps::[{
+        summary: ~= "Troy McClure"
+    }]
+}
+return eps
+        </code>
+      </article>
+      <article>
+        <h3>Bind Variables and Aggregates</h3>
+        <p>You can also return just the desired fields from the bind variable by adding <code>.fieldname</code> after the bind variable.</p>
+        <p>Let's figure out the total runtime of episodes for a show where the episodes have a "trial" in the episode summary</p>
+        <code>
+find
+    {episodes: eps::[{summary: ~= "trial"}]}
+return
+    {name: group(.name), total_runtime: sum(eps.runtime)}
+        </code>
+      </article>
+      <article>
+        <h3>Aggregations: count()</h3>
+        <p>Find number of shows each country has produced.</p>
+        <p>Some shows don't have a country name. use default="unknown" to return a friendlier string instead of null.</p>
+        <code>
+find {}
+return {
+    country: group(.network.country.name) default="unknown",
+    shows: count()
+}
+        </code>
+      </article>
+      <article>
+        <h3>Conclusion</h3>
+        <p>Thanks for trying out Noise!</p>
+        <p>Feel free to keep playing around and let us know what you think on the <a href="https://groups.google.com/forum/#!forum/noisesearch">mailing list</a>.</p>
+        <code>
+
+        </code>
+      </article>
+    </div>
+    <div id="json-schema">
+      <h2>JSON Schema</h2>
+      <code>{
+  "_id": Document Id
+  "cast": [{
+    "character": {
+      "name": Character's name
+      "url": URL to character profile
+    },
+    "person": {
+      "name": Actor's name
+      "url": URL to actor profile
+    }
+  }, {
+    …
+  }],
+  "episodes": [{
+    "airdate": Date in "YYYY-MM-DD" format
+    "airtime": Time in "HH:MM" format
+    "name": Name of the episode
+    "number": Episode number within season, starting with 1
+    "runtime": Integer in minutes with commercials
+    "season": Season, starting with 1
+    "summary": Summary of episode
+    "url": URL to episode
+  }, {
+    …
+  }],
+  "genres": ["Action" || "Adult" || "Adventure" || "Anime" || "Children" || "Comedy" || "Crime" || "DIY" || "Drama" || "Espionage" || "Family" || "Fantasy" || "Food" || "History" || "Horror" || "Legal" || "Medical" || "Music" || "Mystery" || "Nature" || "Romance" || "Science-Fiction" || "Sports" || "Supernatural" || "Thriller" || "Travel" || "War" || "Western"],
+  "language": The original language of the show, e.g. "English"
+  "name": Name of the show
+  "network": {
+    "country": {
+      "code": Country code. e.g. "US"
+      "name": Country name, e.g. "United States"
+      "timezone": e.g. "America/New_York"
+    },
+    "name": Network name, e.g. "CBS"
+  },
+  "premiered": Date in "YYYY-MM-DD" format
+  "rating": {
+    "average": Number from 1.0 to 10.0 || null
+  },
+  "runtime": Integer in minutes with commercials
+  "schedule": {
+    "days": ["Monday" || "Tuesday" || "Wednesday" || "Thursday" || "Friday" || "Saturday" || "Sunday"]
+    "time": 24 hr time in "HH:MM" format
+  },
+  "status": "Ended" || "In Development" || "Running" || "To Be Determined"
+  "summary": Summary of show theme or purpose
+  "type": "Animation" || "Award Show" || "Documentary" || "Game Show" || "News" || "Reality" || "Scripted" || "Sports" || "Talk Show" || "Variety"
+  "url": URL to tvmaze.com show web page
+  "webChannel": The same as the "network" field
+}
+      </code>
+    </div>
+  </body>
+</html>
