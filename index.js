@@ -204,6 +204,7 @@ function sendResponseAsync(res, results, index) {
         }
     } catch(e) {
         noisePool.release(index);
+        results.unref();
     }
 }
 
@@ -239,9 +240,14 @@ const server = http.createServer((req, res) => {
                     // First result is a special case to get the commas right
                     const first = results.next();
                     if (first.value !== undefined) {
-                        res.write('\n' + JSON.stringify(first.value, null, 2), 'utf8', () => {
-                            sendResponseAsync(res, results, index);
-                        });
+                        try {
+                            res.write('\n' + JSON.stringify(first.value, null, 2), 'utf8', () => {
+                                sendResponseAsync(res, results, index);
+                            });
+                        } catch (e) {
+                            results.unref();
+                            throw e;
+                        }
                     } else {
                         res.write('\n]');
                         res.end();
