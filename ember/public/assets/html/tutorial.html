@@ -52,6 +52,18 @@ return
         </code>
       </article>
       <article>
+        <h3>Exact Match</h3>
+        <p>Using <code>==</code> with a string does an exact match query, it is case sensitive.</p>
+        <p>This example finds a show with exactly the name "Star Trek", it's the first movie.</p>
+        <p>Try again the <code>~=</code> operator to see the difference.</p>
+        <code>
+find
+    {name: == "Star Trek"}
+return
+    .name
+        </code>
+      </article>
+      <article>
         <h3>Find in Arrays</h3>
         <p>The <code>genres</code> field contains an array of genres that apply to the show. If we want to find all shows for a particular genre, we have to let it know to look in the array for the value.</p>
         <code>
@@ -105,6 +117,17 @@ return
     .name
         </code>
       </article>
+      <article>
+        <h3>Boolean Operators 4</h3>
+        <p>There's also an alias for the <code>&&</code> operator, it's the comma <code>,</code>. It has exactly the same semantics, but it makes certain queries easier to read. For example if you want to match on several different fields on an object.</p>
+        <code>
+find
+    {genres: [ == "Comedy"], status: == "In Development"}
+return
+    .name
+        </code>
+      </article>
+
       <article>
         <h3>Not Operator</h3>
         <p>You can use the <code>!</code> operator to negate any criteria. Here we want to find Comedy-Music shows that are not currently running.</p>
