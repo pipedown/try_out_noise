@@ -1,7 +1,6 @@
-# noise
+# Try out Noise UI
 
-This README outlines the details of collaborating on this Ember application.
-A short introduction of this app could easily go here.
+This is the UI for the tutorial of the [Noise](https://github.com/pipedown/noise) query language.
 
 ## Prerequisites
 
@@ -10,7 +9,6 @@ You will need the following things properly installed on your computer.
 * [Git](https://git-scm.com/)
 * [Node.js](https://nodejs.org/) (with NPM)
 * [Ember CLI](https://ember-cli.com/)
-* [PhantomJS](http://phantomjs.org/)
 
 ## Installation
 
@@ -23,15 +21,6 @@ You will need the following things properly installed on your computer.
 * `ember serve`
 * Visit your app at [http://localhost:4200](http://localhost:4200).
 
-### Code Generators
-
-Make use of the many generators for code, try `ember help generate` for more details
-
-### Running Tests
-
-* `ember test`
-* `ember test --server`
-
 ### Building
 
 * `ember build` (development)
@@ -39,7 +28,7 @@ Make use of the many generators for code, try `ember help generate` for more det
 
 ### Deploying
 
-Specify what it takes to deploy your app.
+scp -r dist/assets dist/crossdomain.xml dist/robots.txt dist/index.html username@yourserver:/var/www/noise
 
 ## Further Reading / Useful Links
 
