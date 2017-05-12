@@ -1,0 +1,15 @@
+<div id="noise-query">
+  <textarea value={{query}} placeholder='Enter your query here. For example: find {name: == "Seinfeld"} return .'/>
+  <button type="submit" {{action 'doQuery'}}>Query</button>
+</div>
+<div id="noise-result">
+  {{#if (eq results 'in-progress')}}
+    <div class="results-waiting">Query is in progress<span>.</span><span>.</span><span>.</span></div>
+  {{else if (eq results.length 0)}}
+    <div class="results-no">The query didn't return any results.</div>
+  {{else if results}}
+    {{#each results as |show|}}
+      {{noise-result show=show}}
+    {{/each}}
+  {{/if}}
+</div>
