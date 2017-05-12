@@ -12,13 +12,13 @@
       <article>
         <h3>Welcome to the Noise query language tutorial</h3>
         <p>
-          The data set we'll work on is TV shows, imported from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Every TV show (over 28,000!) is one document that contains information about the show itself, like the name, length and network. But also the cast and all the episodes. In all well over a million episodes listed!</p>
+          The data set we'll work on is TV shows, imported from <a href="http://www.tvmaze.com/">TVmaze.com</a> via their json API. Each TV show (over 28,000!) is one document that contains information about the show itself, like the name, length and network. But also the cast and all the episodes. In all well over a million episodes listed!</p>
         <p>
           Let's start simple and query for a show where we already know the name. Run the query with pushing the "Query" button.</p>
         <p>
             The <code>~=</code> operator is for full text matching, which uses stemming to find words with common root words in the field.</p>
         <p>
-          The <code>return .</code> means return the whole document. If you leave off the return clause the query returns the _id of the docuemnt.</p>
+          The <code>return .</code> means return the whole document. If you leave off the return clause the query returns the _id of the document.</p>
         <p>
           Try modifying the query to find your favorite show.</p>
         <code>
@@ -118,6 +118,26 @@ return
         </code>
       </article>
       <article>
+        <h3>Formating Results as Objects</h3>
+        <p>In the return statement you can format result fields in json objects.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    {name: .name, status: .status}
+        </code>
+      </article>
+      <article>
+        <h3>Formating Results as Arrays</h3>
+        <p>You can format the same results in arrays. You can also format the results as complex nested objects and arrays if you want.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    [.name, .status]
+        </code>
+      </article>
+      <article>
         <h3>Order and Limit Results</h3>
         <p>Using the order clause you can order results by values found in the documents.</p>
         <p>Using <code>find {}</code> means look at every document in the index.</p>
@@ -129,12 +149,13 @@ order
     .runtime desc
 return
     {name: .name, runtime: .runtime}
-limit 10
+limit
+    10
         </code>
       </article>
       <article>
-        <h3>Relevency Scoring</h3>
-        <p>Noise uses Term Frequency/Inverse Document Frequency (TF/IDF) scoring system, similar to Lucene. Use the <code>score()</code> function to get the score, and use in the order clause with <code>desc</code> to order the most relevent first.</p>
+        <h3>Relevancy Scoring</h3>
+        <p>Noise uses Term Frequency/Inverse Document Frequency (TF/IDF) scoring system, similar to Lucene. Use the <code>score()</code> function to get the score, and use in the order clause with <code>desc</code> to order the most relevant first.</p>
         <code>
 find
     {summary: ~= "trial", name: ~= "trial"}
@@ -145,9 +166,9 @@ return
         </code>
       </article>
       <article>
-        <h3>Relevency Scoring: Boosting</h3>
+        <h3>Relevancy Scoring: Boosting</h3>
         <p>You can boost the score by using the <code>^</code> operator follow by a boost factor.</p>
-        <p>Here we boost any result where the summary also contains the word crime.</p>
+        <p>Here we boost any result 2x where the summary also contains the word "crime".</p>
         <code>
 find
     {summary: ~= "trial", name: ~= "trial" ||
@@ -193,7 +214,8 @@ return
       </article>
       <article>
         <h3>Bind variables</h3>
-        <p>Find all simpsons episodes that mention Troy McClure by using a bind variable.</p>
+        <p>Bind variables are used to capture matching elements in an array. The matching elements can then be used in return clauses. Before the array, add <code>VariableName::</code> to indicate you wish to capture matching elements. Then use the same variable in the return statement.</p>
+        <p>Here we find all Simpsons episodes that mention Troy McClure.</p>
         <code>
 find {
     name: ~= "The Simpsons",
@@ -206,6 +228,7 @@ return eps
       </article>
       <article>
         <h3>Bind Variables and Aggregates</h3>
+        <p>You can also return just the desired fields from the bind variable by adding <code>.fieldname</code> after the bind variable.</p>
         <p>Let's figure out the total runtime of episodes for a show where the episodes have a "trial" in the episode summary</p>
         <code>
 find
@@ -227,15 +250,11 @@ return {
         </code>
       </article>
       <article>
-        <h3>Aggregations: sum()</h3>
-        <p>Find number of hours of television each country has produced</p>
-        <p> This query is rather expensive, because it has to load the runtime field from over a million episodes in the index!</p>
+        <h3>Conclusion</h3>
+        <p>Thanks for trying out Noise!</p>
+        <p>Feel free to keep playing around and let us know what you think on the <a href="https://groups.google.com/forum/#!forum/noisesearch">mailing list</a>.</p>
         <code>
-find {}
-return {
-    country: group(.network.country.name) default="unknown",
-    total_time: sum(.episodes[].runtime)
-}
+
         </code>
       </article>
     </div>
