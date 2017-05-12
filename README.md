@@ -1,19 +1,48 @@
-# try_out_noise
-Demo to let users try out Noise queries in the browser.
+Try out Noise
+=============
+
+This is the source code of the Noise query language tutorial at
+[https://try.noisesearch.org/](https://try.noisesearch.org/).
 
 
-Setup
------
+Quickstart
+----------
+
+If you want to run this tutorial locally, follow these steps. For more details
+please see the instructions below. You need to have [Node](https://nodejs.org/)
+and [EmberCli](https://ember-cli.com/) installed.
+
+The project is split into a frontend and backend. First start the backend:
+Please note that it might take a while to install as it needs to compile
+Noise first.
+
+    npm install
+    node index.js
+
+Open another terminal and start the frontend:
+
+    cd ember
+    npm install
+    ember serve
+
+Now visit the tutorial at [http://localhost:4200](http://localhost:4200).
+
+Please note that the backend will start downloading data as soon as it is
+started. You can already perform queries, but be aware that the corresponding
+data might not have been indexed yet.
+
+
+Running the backend
+-------------------
+
+First of all you need to install its dependencies:
 
     npm install
 
 
-Running
--------
+### Running manually
 
-### Manually
-
-For sunning the demo, simply execute it:
+For running the node backend of the tutorial, simply execute it:
 
     node index.js
 
@@ -22,7 +51,7 @@ It will start downloading the TV shows from
 demo at [http://localhost:3000/](http://localhost:3000/).
 
 
-### Via Systemd
+### Running via Systemd
 
 It's also possible to start it via Systemd. Copy the supplied Systemd Service
 script from
@@ -55,9 +84,7 @@ The demo can be tweaked with some environment variables:
  - `NOISE_MAX_WAITING_CLIENTS` (default: 10): Number of clients that will be queued up before they return with an error.
  - `NOISE_ACQUIRE_TIMEOUT` (default: 5000): The time in milliseconds that will be be tried to acquire an index to query on. This is for the waiting clients.
 
-
-Monitoring
-----------
+### Monitoring the backend
 
 If you run the demo on a server, you might want to have some additional
 monitoring in case it gets stuck. The `scripts/monitor-try-out-noise.sh`
@@ -83,3 +110,12 @@ You can double check if it really start with looking at the logs:
 It should look something like this:
 
     Apr 28 01:53:47 frea systemd[1]: Started Monitor for Try out Noise
+
+
+
+Running the frontend
+--------------------
+
+The frontend is built with [Ember](https://emberjs.com/). For more information
+on how to develop and run it, see the application's
+[README in the `ember` sub-directory](ember/README.md).
