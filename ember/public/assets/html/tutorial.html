@@ -135,7 +135,7 @@ return
         <p>Note: You must have at least one non-negated clause in the query or you will get an error.</p>
         <code>
 find
-    {genres: [ == "Comedy"] && genres: [ == "Music"] && status: !== "Running"}
+    {genres: [ == "Comedy"] && genres: [ == "Music"] && status: != "Running"}
 return
     .name
         </code>
