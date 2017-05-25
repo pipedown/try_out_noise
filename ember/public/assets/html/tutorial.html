@@ -108,7 +108,7 @@ return
       </article>
       <article>
         <h3>Boolean Operators 3</h3>
-        <p>Here is another way to write same query but using separate objects with a <code>||</code> between them. It's exactly equivelent but perhaps easier to read.</p>
+        <p>Here is another way to write the same query but using separate objects with a <code>||</code> between them. It's exactly the same as the previous query, but a little easier to read.</p>
         <code>
 find
     {genres: [ == "Crime"] && genres: [ == "Comedy"]} ||
@@ -227,7 +227,7 @@ return
       </article>
       <article>
         <h3>Aggregates: Group and Sum</h3>
-        <p>For each show that is about a trial, lets firgure out the total runtime of all episodes for that show.</p>
+        <p>For each show that is about a trial, let's figure out the total runtime of all episodes for that show.</p>
         <code>
 find
     {summary: ~= "trial"}
