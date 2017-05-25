@@ -41,6 +41,26 @@ return
         </code>
       </article>
       <article>
+        <h3>Formating Results as Objects</h3>
+        <p>In the return statement you can format result fields in json objects.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    {name: .name, status: .status}
+        </code>
+      </article>
+      <article>
+        <h3>Formating Results as Arrays</h3>
+        <p>You can format the same results in arrays. You can also format the results as complex nested objects and arrays if you want.</p>
+        <code>
+find
+    {name: ~= "star trek"}
+return
+    [.name, .status]
+        </code>
+      </article>
+      <article>
         <h3>Proximity Match</h3>
         <p>Using the <code>~N=</code> operator where N is an integer turns it into a proximity match operator. Which means it matches if the the words in the query are N or less words away from each other. Here we have a query where "crime" and "family" can have no more than 5 words between them.</p>
         <p>If you set the distance to 0, then the two words must be besides each other, but any order.</p>
@@ -138,26 +158,6 @@ find
     {genres: [ == "Comedy"] && genres: [ == "Music"] && status: != "Running"}
 return
     .name
-        </code>
-      </article>
-      <article>
-        <h3>Formating Results as Objects</h3>
-        <p>In the return statement you can format result fields in json objects.</p>
-        <code>
-find
-    {name: ~= "star trek"}
-return
-    {name: .name, status: .status}
-        </code>
-      </article>
-      <article>
-        <h3>Formating Results as Arrays</h3>
-        <p>You can format the same results in arrays. You can also format the results as complex nested objects and arrays if you want.</p>
-        <code>
-find
-    {name: ~= "star trek"}
-return
-    [.name, .status]
         </code>
       </article>
       <article>
