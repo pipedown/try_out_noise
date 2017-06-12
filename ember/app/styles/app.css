@@ -1,3 +1,28 @@
+/* Thanks https://github.com/majodev/google-webfonts-helper for making
+   self-hosting the Google WebFonts so easy */
+
+/* eb-garamond-regular - latin-ext_latin */
+@font-face {
+  font-family: 'EB Garamond';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('EB Garamond'),
+    local('EBGaramond'),
+    url('/assets/fonts/eb-garamond-v7-latin-ext_latin-regular.woff') format('woff');
+}
+
+/* raleway-regular - latin-ext_latin */
+@font-face {
+  font-family: 'Raleway';
+  font-style: normal;
+  font-weight: 400;
+  src:
+    local('Raleway'),
+    local('Raleway-Regular'),
+    url('/assets/fonts/raleway-v11-latin-ext_latin-regular.woff') format('woff');
+}
+
 html,
 body {
   height: 100%;
