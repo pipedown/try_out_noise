@@ -11,7 +11,7 @@ export default Ember.Component.extend({
   actions: {
     doQuery() {
       const query = this.$('textarea').val();
-      Ember.$.post(ENV.noiseUrl, query)
+      Ember.$.post('//' + window.location.hostname + ENV.noiseUrl, query)
         .done(data => {
           this.set('results', data);
         })
